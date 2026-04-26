@@ -1,0 +1,10 @@
+﻿using MediatR;
+using CoffeeLearn.Application.Orders.DTOs;
+
+namespace CoffeeLearn.Application.Orders.Commands;
+
+public class AcceptOrderCommand : IRequest<OrderDto?>
+{
+	public int OrderId { get; set; }
+	public Guid OfficeBoyId { get; set; }
+}
