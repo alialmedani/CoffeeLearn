@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CoffeeLearn.Api/CoffeeLearn.Api.csproj" />
+  <Project Path="CoffeeLearn.Application/CoffeeLearn.Application.csproj" />
+  <Project Path="CoffeeLearn.Domain/CoffeeLearn.Domain.csproj" />
+  <Project Path="CoffeeLearn.Infrastructure/CoffeeLearn.Infrastructure.csproj" />
+</Solution>
