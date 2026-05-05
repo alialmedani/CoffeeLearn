@@ -3,6 +3,7 @@ using MediatR;
 using CoffeeLearn.Application;
 using CoffeeLearn.Application.Common.Behaviors;
 using CoffeeLearn.Infrastructure;
+using CoffeeLearn.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,7 @@ if (app.Environment.IsDevelopment())
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoffeeLearn.Api v1");
 	});
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 

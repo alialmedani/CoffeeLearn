@@ -1,9 +1,10 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.DTOs;
 using CoffeeLearn.Domain.Entities;
 using CoffeeLearn.Domain.Enums;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeLearn.Application.Orders.Commands;
 
@@ -29,7 +30,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 
 		if (products.Count != productIds.Count)
 		{
-			throw new Exception("One or more selected products do not exist.");
+			throw new NotFoundException("One or more selected products do not exist.");
 		}
 
 		var order = new Order

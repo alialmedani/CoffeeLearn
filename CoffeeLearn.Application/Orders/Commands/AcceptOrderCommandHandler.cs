@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.DTOs;
 using CoffeeLearn.Domain.Enums;
@@ -22,10 +23,10 @@ public class AcceptOrderCommandHandler : IRequestHandler<AcceptOrderCommand, Ord
 			.FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken);
 
 		if (order is null)
-			return null;
+			throw new NotFoundException($"Order with id {request.OrderId} was not found.");
 
 		if (order.Status != OrderStatus.Pending)
-			throw new Exception("Only pending orders can be accepted.");
+			throw new BusinessRuleException("Only pending orders can be accepted.");
 
 		order.Status = OrderStatus.Accepted;
 		order.AcceptedByOfficeBoyId = request.OfficeBoyId;

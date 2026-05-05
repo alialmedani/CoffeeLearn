@@ -65,4 +65,19 @@ public class OrdersController : ControllerBase
 
 		return Ok(result);
 	}
+
+
+	[HttpPut("{id:int}/cancel")]
+	public async Task<ActionResult<OrderDto>> Cancel(int id)
+	{
+		var result = await _sender.Send(new CancelOrderCommand { OrderId = id });
+		return Ok(result);
+	}
+
+	[HttpGet("my")]
+	public async Task<ActionResult<List<OrderDto>>> GetMyOrders([FromQuery] Guid userId)
+	{
+		var result = await _sender.Send(new GetMyOrdersQuery { UserId = userId });
+		return Ok(result);
+	}
 }
