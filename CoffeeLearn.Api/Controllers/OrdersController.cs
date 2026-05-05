@@ -80,4 +80,28 @@ public class OrdersController : ControllerBase
 		var result = await _sender.Send(new GetMyOrdersQuery { UserId = userId });
 		return Ok(result);
 	}
+	[HttpGet("by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
+	[HttpGet("pending-by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetPendingByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetPendingOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
+	[HttpGet("accepted-by-officeboy")]
+	public async Task<ActionResult<List<OrderDto>>> GetAcceptedByOfficeBoy([FromQuery] Guid officeBoyId)
+	{
+		var result = await _sender.Send(new GetAcceptedOrdersByOfficeBoyQuery { OfficeBoyId = officeBoyId });
+		return Ok(result);
+	}
+	[HttpGet("completed-by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetCompletedByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetCompletedOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
 }
