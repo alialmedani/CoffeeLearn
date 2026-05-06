@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoffeeLearn.Application.Products.Commands;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Application.Products.Queries;
-
+using CoffeeLearn.Application.Common.Models;
 namespace CoffeeLearn.Api.Controllers;
 
 [ApiController]
@@ -17,10 +17,16 @@ public class ProductsController : ControllerBase
 		_sender = sender;
 	}
 
+	//[HttpGet]
+	//public async Task<ActionResult<List<ProductDto>>> GetAll()
+	//{
+	//	var result = await _sender.Send(new GetProductsQuery());
+	//	return Ok(result);
+	//}
 	[HttpGet]
-	public async Task<ActionResult<List<ProductDto>>> GetAll()
+	public async Task<ActionResult<CoffeeLearn.Application.Common.Models.PagedResult<ProductDto>>> GetAll([FromQuery] GetProductsQuery query)
 	{
-		var result = await _sender.Send(new GetProductsQuery());
+		var result = await _sender.Send(query);
 		return Ok(result);
 	}
 
@@ -39,7 +45,11 @@ public class ProductsController : ControllerBase
 	public async Task<ActionResult<ProductDto>> Create([FromBody] CreateProductCommand command)
 	{
 		var result = await _sender.Send(command);
-		return Ok(result);
+
+		return CreatedAtAction(
+			nameof(GetById),
+			new { id = result.Id },
+			result);
 	}
 
 	[HttpPut("{id:int}")]

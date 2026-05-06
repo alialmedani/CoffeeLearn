@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
 using CoffeeLearn.Domain.Enums;
 
@@ -17,9 +18,7 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 
 	public async Task<List<OrderDto>> Handle(GetAcceptedOrdersByOfficeBoyQuery request, CancellationToken cancellationToken)
 	{
-		var productNames = await _context.Products
-			.AsNoTracking()
-			.ToDictionaryAsync(x => x.Id, x => x.Name, cancellationToken);
+		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
 
 		var orders = await _context.Orders
 			.AsNoTracking()
@@ -28,23 +27,6 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 			.OrderByDescending(x => x.AcceptedAt)
 			.ToListAsync(cancellationToken);
 
-		return orders.Select(x => new OrderDto
-		{
-			Id = x.Id,
-			UserId = x.UserId,
-			FloorId = x.FloorId,
-			Status = x.Status.ToString(),
-			AcceptedByOfficeBoyId = x.AcceptedByOfficeBoyId,
-			CreatedAt = x.CreatedAt,
-			AcceptedAt = x.AcceptedAt,
-			CompletedAt = x.CompletedAt,
-			Items = x.Items.Select(i => new OrderItemDto
-			{
-				ProductId = i.ProductId,
-				ProductName = productNames.TryGetValue(i.ProductId, out var name) ? name : string.Empty,
-				Quantity = i.Quantity,
-				Price = i.Price
-			}).ToList()
-		}).ToList();
+		return orders.Select(x => OrderMapper.ToDto(x, productNames)).ToList();
 	}
 }

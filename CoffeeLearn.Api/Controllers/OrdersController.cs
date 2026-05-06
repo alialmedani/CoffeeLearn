@@ -35,11 +35,50 @@ public class OrdersController : ControllerBase
 		return Ok(result);
 	}
 
+	[HttpGet("my")]
+	public async Task<ActionResult<List<OrderDto>>> GetMyOrders([FromQuery] Guid userId)
+	{
+		var result = await _sender.Send(new GetMyOrdersQuery { UserId = userId });
+		return Ok(result);
+	}
+
+	[HttpGet("by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
+
+	[HttpGet("pending-by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetPendingByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetPendingOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
+
+	[HttpGet("accepted-by-officeboy")]
+	public async Task<ActionResult<List<OrderDto>>> GetAcceptedByOfficeBoy([FromQuery] Guid officeBoyId)
+	{
+		var result = await _sender.Send(new GetAcceptedOrdersByOfficeBoyQuery { OfficeBoyId = officeBoyId });
+		return Ok(result);
+	}
+
+	[HttpGet("completed-by-floor")]
+	public async Task<ActionResult<List<OrderDto>>> GetCompletedByFloor([FromQuery] Guid floorId)
+	{
+		var result = await _sender.Send(new GetCompletedOrdersByFloorQuery { FloorId = floorId });
+		return Ok(result);
+	}
+
 	[HttpPost]
 	public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderCommand command)
 	{
 		var result = await _sender.Send(command);
-		return Ok(result);
+
+		return CreatedAtAction(
+			nameof(GetById),
+			new { id = result.Id },
+			result);
 	}
 
 	[HttpPut("{id:int}/accept")]
@@ -48,10 +87,6 @@ public class OrdersController : ControllerBase
 		command.OrderId = id;
 
 		var result = await _sender.Send(command);
-
-		if (result is null)
-			return NotFound();
-
 		return Ok(result);
 	}
 
@@ -59,49 +94,13 @@ public class OrdersController : ControllerBase
 	public async Task<ActionResult<OrderDto>> Complete(int id)
 	{
 		var result = await _sender.Send(new CompleteOrderCommand { OrderId = id });
-
-		if (result is null)
-			return NotFound();
-
 		return Ok(result);
 	}
-
 
 	[HttpPut("{id:int}/cancel")]
 	public async Task<ActionResult<OrderDto>> Cancel(int id)
 	{
 		var result = await _sender.Send(new CancelOrderCommand { OrderId = id });
-		return Ok(result);
-	}
-
-	[HttpGet("my")]
-	public async Task<ActionResult<List<OrderDto>>> GetMyOrders([FromQuery] Guid userId)
-	{
-		var result = await _sender.Send(new GetMyOrdersQuery { UserId = userId });
-		return Ok(result);
-	}
-	[HttpGet("by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetByFloor([FromQuery] Guid floorId)
-	{
-		var result = await _sender.Send(new GetOrdersByFloorQuery { FloorId = floorId });
-		return Ok(result);
-	}
-	[HttpGet("pending-by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetPendingByFloor([FromQuery] Guid floorId)
-	{
-		var result = await _sender.Send(new GetPendingOrdersByFloorQuery { FloorId = floorId });
-		return Ok(result);
-	}
-	[HttpGet("accepted-by-officeboy")]
-	public async Task<ActionResult<List<OrderDto>>> GetAcceptedByOfficeBoy([FromQuery] Guid officeBoyId)
-	{
-		var result = await _sender.Send(new GetAcceptedOrdersByOfficeBoyQuery { OfficeBoyId = officeBoyId });
-		return Ok(result);
-	}
-	[HttpGet("completed-by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetCompletedByFloor([FromQuery] Guid floorId)
-	{
-		var result = await _sender.Send(new GetCompletedOrdersByFloorQuery { FloorId = floorId });
 		return Ok(result);
 	}
 }
