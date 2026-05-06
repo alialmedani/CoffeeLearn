@@ -44,35 +44,35 @@ public class OrdersController : ControllerBase
 	}
 
 	[HttpGet("my")]
-	public async Task<ActionResult<List<OrderDto>>> GetMyOrders([FromQuery] GetMyOrdersQuery query)
+	public async Task<ActionResult<PagedResult<OrderDto>>> GetMyOrders([FromQuery] GetMyOrdersQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
 
 	[HttpGet("by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetByFloor([FromQuery] GetOrdersByFloorQuery query)
+	public async Task<ActionResult<PagedResult<OrderDto>>> GetByFloor([FromQuery] GetOrdersByFloorQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
 
 	[HttpGet("pending-by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetPendingByFloor([FromQuery] GetPendingOrdersByFloorQuery query)
+	public async Task<ActionResult<PagedResult<OrderDto>>> GetPendingByFloor([FromQuery] GetPendingOrdersByFloorQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
 
 	[HttpGet("accepted-by-officeboy")]
-	public async Task<ActionResult<List<OrderDto>>> GetAcceptedByOfficeBoy([FromQuery] GetAcceptedOrdersByOfficeBoyQuery query)
+	public async Task<ActionResult<PagedResult<OrderDto>>> GetAcceptedByOfficeBoy([FromQuery] GetAcceptedOrdersByOfficeBoyQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
 
 	[HttpGet("completed-by-floor")]
-	public async Task<ActionResult<List<OrderDto>>> GetCompletedByFloor([FromQuery] GetCompletedOrdersByFloorQuery query)
+	public async Task<ActionResult<PagedResult<OrderDto>>> GetCompletedByFloor([FromQuery] GetCompletedOrdersByFloorQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);

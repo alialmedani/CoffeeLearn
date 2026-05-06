@@ -1,11 +1,11 @@
 ﻿using MediatR;
+using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
 
 namespace CoffeeLearn.Application.Orders.Queries;
 
-public class GetCompletedOrdersByFloorQuery : IRequest<List<OrderDto>>
+public class GetCompletedOrdersByFloorQuery : OrderListQueryBase, IRequest<PagedResult<OrderDto>>
 {
 	public Guid FloorId { get; set; }
-	public string? SortBy { get; set; }
-	public string? SortDirection { get; set; } = "desc";
 }
