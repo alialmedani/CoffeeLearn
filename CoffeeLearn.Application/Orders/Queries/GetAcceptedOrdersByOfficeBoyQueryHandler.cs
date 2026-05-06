@@ -20,12 +20,14 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 	{
 		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
 
-		var orders = await _context.Orders
+		var query = _context.Orders
 			.AsNoTracking()
 			.Include(x => x.Items)
-			.Where(x => x.AcceptedByOfficeBoyId == request.OfficeBoyId && x.Status == OrderStatus.Accepted)
-			.OrderByDescending(x => x.AcceptedAt)
-			.ToListAsync(cancellationToken);
+			.Where(x => x.AcceptedByOfficeBoyId == request.OfficeBoyId && x.Status == OrderStatus.Accepted);
+
+		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "acceptedat");
+
+		var orders = await query.ToListAsync(cancellationToken);
 
 		return orders.Select(x => OrderMapper.ToDto(x, productNames)).ToList();
 	}

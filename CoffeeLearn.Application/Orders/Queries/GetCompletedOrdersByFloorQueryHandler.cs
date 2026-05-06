@@ -20,12 +20,14 @@ public class GetCompletedOrdersByFloorQueryHandler : IRequestHandler<GetComplete
 	{
 		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
 
-		var orders = await _context.Orders
+		var query = _context.Orders
 			.AsNoTracking()
 			.Include(x => x.Items)
-			.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Completed)
-			.OrderByDescending(x => x.CompletedAt)
-			.ToListAsync(cancellationToken);
+			.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Completed);
+
+		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "completedat");
+
+		var orders = await query.ToListAsync(cancellationToken);
 
 		return orders.Select(x => OrderMapper.ToDto(x, productNames)).ToList();
 	}

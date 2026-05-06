@@ -19,12 +19,14 @@ public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, List<Or
 	{
 		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
 
-		var orders = await _context.Orders
+		var query = _context.Orders
 			.AsNoTracking()
 			.Include(x => x.Items)
-			.Where(x => x.UserId == request.UserId)
-			.OrderByDescending(x => x.CreatedAt)
-			.ToListAsync(cancellationToken);
+			.Where(x => x.UserId == request.UserId);
+
+		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "createdat");
+
+		var orders = await query.ToListAsync(cancellationToken);
 
 		return orders.Select(x => OrderMapper.ToDto(x, productNames)).ToList();
 	}
