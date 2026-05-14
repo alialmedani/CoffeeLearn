@@ -23,9 +23,7 @@ public class AcceptOrderCommandHandler : IRequestHandler<AcceptOrderCommand, Ord
 
 		OrderRules.EnsurePendingForAccept(order);
 
-		order.Status = CoffeeLearn.Domain.Enums.OrderStatus.Accepted;
-		order.AcceptedByOfficeBoyId = request.OfficeBoyId;
-		order.AcceptedAt = DateTime.UtcNow;
+		order.Accept(request.OfficeBoyId);
 
 		await _context.SaveChangesAsync(cancellationToken);
 

@@ -24,7 +24,9 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
 				Id = x.Id,
 				Name = x.Name,
 				Quantity = x.Quantity,
-				Price = x.Price
+				Price = x.Price,
+				CreatedAt = x.CreatedAt,
+				UpdatedAt = x.UpdatedAt
 			})
 			.FirstOrDefaultAsync(cancellationToken);
 	}

@@ -31,7 +31,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 			Id = product.Id,
 			Name = product.Name,
 			Quantity = product.Quantity,
-			Price = product.Price
+			Price = product.Price,
+			CreatedAt = product.CreatedAt,
+			UpdatedAt = product.UpdatedAt
 		};
 	}
 }

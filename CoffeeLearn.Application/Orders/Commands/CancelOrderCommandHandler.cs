@@ -2,7 +2,6 @@
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
-using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Orders.Commands;
 
@@ -24,7 +23,18 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, Ord
 
 		OrderRules.EnsureCanCancel(order);
 
-		order.Status = OrderStatus.Cancelled;
+		var requestedItems = order.Items
+			.Select(x => (x.ProductId, x.Quantity))
+			.ToList();
+
+		var products = await OrderStockHelper.GetProductsForItemsOrThrowAsync(
+			_context,
+			requestedItems,
+			cancellationToken);
+
+		OrderStockHelper.RestoreStock(products, requestedItems);
+
+		order.Cancel();
 
 		await _context.SaveChangesAsync(cancellationToken);
 

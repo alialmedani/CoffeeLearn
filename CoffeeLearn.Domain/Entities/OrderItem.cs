@@ -1,9 +1,9 @@
-﻿namespace CoffeeLearn.Domain.Entities;
+﻿using CoffeeLearn.Domain.Common;
 
-public class OrderItem
+namespace CoffeeLearn.Domain.Entities;
+
+public class OrderItem : BaseEntity
 {
-	public int Id { get; set; }
-
 	public int OrderId { get; set; }
 	public Order Order { get; set; } = default!;
 

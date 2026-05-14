@@ -1,10 +1,9 @@
-﻿using CoffeeLearn.Application.Common.Exceptions;
+﻿using MediatR;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
 using CoffeeLearn.Domain.Entities;
 using CoffeeLearn.Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeLearn.Application.Orders.Commands;
 
@@ -19,19 +18,19 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 
 	public async Task<OrderDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
 	{
-		var productIds = request.Items
-			.Select(x => x.ProductId)
-			.Distinct()
+		var requestedItems = request.Items
+			.Select(x => (x.ProductId, x.Quantity))
 			.ToList();
 
-		var products = await _context.Products
-			.Where(x => productIds.Contains(x.Id))
-			.ToListAsync(cancellationToken);
+		var products = await OrderStockHelper.GetProductsForItemsOrThrowAsync(
+			_context,
+			requestedItems,
+			cancellationToken);
 
-		if (products.Count != productIds.Count)
-		{
-			throw new NotFoundException("One or more selected products do not exist.");
-		}
+		OrderStockHelper.EnsureStockAvailability(products, requestedItems);
+
+		// الخصم صار هنا
+		OrderStockHelper.DeductStock(products, requestedItems);
 
 		var order = new Order
 		{
@@ -56,20 +55,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 		_context.Orders.Add(order);
 		await _context.SaveChangesAsync(cancellationToken);
 
-		return new OrderDto
-		{
-			Id = order.Id,
-			UserId = order.UserId,
-			FloorId = order.FloorId,
-			Status = order.Status.ToString(),
-			CreatedAt = order.CreatedAt,
-			Items = order.Items.Select(x => new OrderItemDto
-			{
-				ProductId = x.ProductId,
-				ProductName = products.First(p => p.Id == x.ProductId).Name,
-				Quantity = x.Quantity,
-				Price = x.Price
-			}).ToList()
-		};
+		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
+
+		return OrderMapper.ToDto(order, productNames);
 	}
 }

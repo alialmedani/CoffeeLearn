@@ -65,7 +65,9 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 				Id = x.Id,
 				Name = x.Name,
 				Quantity = x.Quantity,
-				Price = x.Price
+				Price = x.Price,
+				CreatedAt = x.CreatedAt,
+				UpdatedAt = x.UpdatedAt
 			})
 			.ToListAsync(cancellationToken);
 

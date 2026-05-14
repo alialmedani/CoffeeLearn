@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Domain.Common;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Infrastructure.Persistence;
@@ -13,6 +14,23 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<Product> Products => Set<Product>();
 	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+
+	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+	{
+		var modifiedEntries = ChangeTracker
+			.Entries<BaseEntity>()
+			.Where(x => x.State == EntityState.Modified)
+			.ToList();
+
+		foreach (var entry in modifiedEntries)
+		{
+			entry.Entity.MarkAsUpdated();
+
+			entry.Property(x => x.CreatedAt).IsModified = false;
+		}
+
+		return base.SaveChangesAsync(cancellationToken);
+	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

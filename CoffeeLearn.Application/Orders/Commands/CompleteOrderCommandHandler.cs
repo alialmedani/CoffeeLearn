@@ -23,8 +23,7 @@ public class CompleteOrderCommandHandler : IRequestHandler<CompleteOrderCommand,
 
 		OrderRules.EnsureAcceptedForComplete(order);
 
-		order.Status = CoffeeLearn.Domain.Enums.OrderStatus.Completed;
-		order.CompletedAt = DateTime.UtcNow;
+		order.Complete();
 
 		await _context.SaveChangesAsync(cancellationToken);
 
