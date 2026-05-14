@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 
 namespace CoffeeLearn.Application.Products.Queries;
@@ -57,19 +58,14 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 
 		var totalCount = await query.CountAsync(cancellationToken);
 
-		var items = await query
+		var products = await query
 			.Skip((request.PageNumber - 1) * request.PageSize)
 			.Take(request.PageSize)
-			.Select(x => new ProductDto
-			{
-				Id = x.Id,
-				Name = x.Name,
-				Quantity = x.Quantity,
-				Price = x.Price,
-				CreatedAt = x.CreatedAt,
-				UpdatedAt = x.UpdatedAt
-			})
 			.ToListAsync(cancellationToken);
+
+		var items = products
+			.Select(ProductMapper.ToDto)
+			.ToList();
 
 		return new PagedResult<ProductDto>
 		{

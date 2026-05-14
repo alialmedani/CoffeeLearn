@@ -10,6 +10,8 @@ public class OrderDto
 	public Guid? AcceptedByOfficeBoyId { get; set; }
 
 	public DateTime CreatedAt { get; set; }
+	public DateTime? UpdatedAt { get; set; }
+
 	public DateTime? AcceptedAt { get; set; }
 	public DateTime? CompletedAt { get; set; }
 

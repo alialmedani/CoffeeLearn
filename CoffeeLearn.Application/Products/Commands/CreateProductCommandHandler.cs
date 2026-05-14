@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Entities;
 
@@ -26,14 +27,6 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 		_context.Products.Add(product);
 		await _context.SaveChangesAsync(cancellationToken);
 
-		return new ProductDto
-		{
-			Id = product.Id,
-			Name = product.Name,
-			Quantity = product.Quantity,
-			Price = product.Price,
-			CreatedAt = product.CreatedAt,
-			UpdatedAt = product.UpdatedAt
-		};
+		return ProductMapper.ToDto(product);
 	}
 }

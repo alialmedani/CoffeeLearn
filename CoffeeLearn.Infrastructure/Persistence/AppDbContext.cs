@@ -7,8 +7,13 @@ namespace CoffeeLearn.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IApplicationDbContext
 {
-	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+	private readonly IDateTimeProvider _dateTimeProvider;
+
+	public AppDbContext(
+		DbContextOptions<AppDbContext> options,
+		IDateTimeProvider dateTimeProvider) : base(options)
 	{
+		_dateTimeProvider = dateTimeProvider;
 	}
 
 	public DbSet<Product> Products => Set<Product>();
@@ -17,16 +22,25 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
-		var modifiedEntries = ChangeTracker
+		var entries = ChangeTracker
 			.Entries<BaseEntity>()
-			.Where(x => x.State == EntityState.Modified)
+			.Where(x => x.State == EntityState.Added || x.State == EntityState.Modified)
 			.ToList();
 
-		foreach (var entry in modifiedEntries)
+		foreach (var entry in entries)
 		{
-			entry.Entity.MarkAsUpdated();
+			if (entry.State == EntityState.Added)
+			{
+				entry.Entity.CreatedAt = _dateTimeProvider.UtcNow;
+				entry.Entity.UpdatedAt = null;
+			}
 
-			entry.Property(x => x.CreatedAt).IsModified = false;
+			if (entry.State == EntityState.Modified)
+			{
+				entry.Entity.UpdatedAt = _dateTimeProvider.UtcNow;
+
+				entry.Property(x => x.CreatedAt).IsModified = false;
+			}
 		}
 
 		return base.SaveChangesAsync(cancellationToken);

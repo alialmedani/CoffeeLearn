@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Infrastructure.Persistence;
+using CoffeeLearn.Infrastructure.Services;
 
 namespace CoffeeLearn.Infrastructure;
 
@@ -15,6 +16,8 @@ public static class DependencyInjection
 
 		services.AddScoped<IApplicationDbContext>(provider =>
 			provider.GetRequiredService<AppDbContext>());
+
+		services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 		return services;
 	}

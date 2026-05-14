@@ -15,6 +15,7 @@ public static class OrderMapper
 			Status = order.Status.ToString(),
 			AcceptedByOfficeBoyId = order.AcceptedByOfficeBoyId,
 			CreatedAt = order.CreatedAt,
+			UpdatedAt = order.UpdatedAt,
 			AcceptedAt = order.AcceptedAt,
 			CompletedAt = order.CompletedAt,
 			Items = order.Items.Select(i => new OrderItemDto
