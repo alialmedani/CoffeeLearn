@@ -10,7 +10,12 @@ public class Product : BaseEntity
 	public bool IsActive { get; set; } = true;
 	public string? Description { get; set; }
 	public string? ImageUrl { get; set; }
+
+	public int? CategoryId { get; set; }
+	public Category? Category { get; set; }
+
 	public List<ProductVariant> Variants { get; set; } = new();
+
 	public void Activate()
 	{
 		IsActive = true;
@@ -20,6 +25,7 @@ public class Product : BaseEntity
 	{
 		IsActive = false;
 	}
+
 	public void DecreaseStock(int quantity)
 	{
 		if (quantity <= 0)

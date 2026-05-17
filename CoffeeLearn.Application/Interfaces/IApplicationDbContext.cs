@@ -12,6 +12,6 @@ public interface IApplicationDbContext
 	DbSet<OrderItem> OrderItems { get; }
 
 	DbSet<UploadedFile> UploadedFiles { get; }
-
+	DbSet<Category> Categories { get; }
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -17,6 +17,8 @@ public static class ProductMapper
 			IsActive = product.IsActive,
 			Description = product.Description,
 			ImageUrl = product.ImageUrl,
+			CategoryId = product.CategoryId,
+			CategoryName = product.Category?.Name,
 			AvailabilityStatus = GetAvailabilityStatus(product),
 			CreatedAt = product.CreatedAt,
 			UpdatedAt = product.UpdatedAt,

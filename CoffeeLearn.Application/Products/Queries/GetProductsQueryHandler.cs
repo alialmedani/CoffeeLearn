@@ -20,6 +20,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 	public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
 	{
 		var query = _context.Products
+			.Include(x => x.Category)
 			.AsNoTracking()
 			.AsQueryable();
 
@@ -27,6 +28,11 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 		{
 			var search = request.Search.Trim().ToLower();
 			query = query.Where(x => x.Name.ToLower().Contains(search));
+		}
+
+		if (request.CategoryId.HasValue)
+		{
+			query = query.Where(x => x.CategoryId == request.CategoryId.Value);
 		}
 
 		if (request.MinPrice.HasValue)
@@ -62,9 +68,9 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 		}
 
 		query = ProductSortingHelper.ApplySorting(
-	query,
-	request.SortBy,
-	request.SortDirection);
+			query,
+			request.SortBy,
+			request.SortDirection);
 
 		var totalCount = await query.CountAsync(cancellationToken);
 

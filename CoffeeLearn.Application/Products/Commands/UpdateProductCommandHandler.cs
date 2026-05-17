@@ -18,16 +18,27 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 	public async Task<ProductDto?> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
 	{
 		var product = await _context.Products
+			.Include(x => x.Category)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (product is null)
 			return null;
+
+		if (request.CategoryId.HasValue)
+		{
+			var categoryExists = await _context.Categories
+				.AnyAsync(x => x.Id == request.CategoryId.Value, cancellationToken);
+
+			if (!categoryExists)
+				throw new InvalidOperationException("Category not found.");
+		}
 
 		product.Name = request.Name;
 		product.Quantity = request.Quantity;
 		product.Price = request.Price;
 		product.Description = request.Description;
 		product.ImageUrl = request.ImageUrl;
+		product.CategoryId = request.CategoryId;
 
 		await _context.SaveChangesAsync(cancellationToken);
 

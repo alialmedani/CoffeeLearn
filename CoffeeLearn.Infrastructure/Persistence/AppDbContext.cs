@@ -21,7 +21,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
-
+	public DbSet<Category> Categories => Set<Category>();
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -64,6 +64,21 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		modelBuilder.Entity<Category>(entity =>
+		{
+			entity.Property(x => x.Name)
+				.HasMaxLength(200)
+				.IsRequired();
+
+			entity.Property(x => x.Description)
+				.HasMaxLength(1000);
+
+			entity.Property(x => x.IsActive)
+				.IsRequired();
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
+
 		modelBuilder.Entity<Product>(entity =>
 		{
 			entity.Property(x => x.Name)
@@ -78,6 +93,11 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.Property(x => x.ImageUrl)
 				.HasMaxLength(500);
+
+			entity.HasOne(x => x.Category)
+				.WithMany(x => x.Products)
+				.HasForeignKey(x => x.CategoryId)
+				.OnDelete(DeleteBehavior.SetNull);
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
