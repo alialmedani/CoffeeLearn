@@ -22,6 +22,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 	public DbSet<Category> Categories => Set<Category>();
+	public DbSet<Brand> Brands => Set<Brand>();
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -78,7 +79,20 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+		modelBuilder.Entity<Brand>(entity =>
+		{
+			entity.Property(x => x.Name)
+				.HasMaxLength(200)
+				.IsRequired();
 
+			entity.Property(x => x.Description)
+				.HasMaxLength(1000);
+
+			entity.Property(x => x.IsActive)
+				.IsRequired();
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
 		modelBuilder.Entity<Product>(entity =>
 		{
 			entity.Property(x => x.Name)

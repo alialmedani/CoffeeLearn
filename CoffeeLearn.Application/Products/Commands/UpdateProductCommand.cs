@@ -13,4 +13,5 @@ public class UpdateProductCommand : IRequest<ProductDto?>
 	public string? ImageUrl { get; set; }
 
 	public int? CategoryId { get; set; }
+	public int? BrandId { get; set; }
 }

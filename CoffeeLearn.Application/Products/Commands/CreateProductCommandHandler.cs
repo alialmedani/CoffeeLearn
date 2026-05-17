@@ -34,7 +34,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 			Price = request.Price,
 			Description = request.Description,
 			ImageUrl = request.ImageUrl,
-			CategoryId = request.CategoryId
+			CategoryId = request.CategoryId,
+			BrandId = request.BrandId
 		};
 
 		_context.Products.Add(product);
@@ -45,6 +46,15 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 			await _context.Products
 				.Include(x => x.Category)
 				.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
+		}
+
+		if (request.BrandId.HasValue)
+		{
+			var brandExists = await _context.Brands
+				.AnyAsync(x => x.Id == request.BrandId.Value, cancellationToken);
+
+			if (!brandExists)
+				throw new InvalidOperationException("Brand not found.");
 		}
 
 		return ProductMapper.ToDto(product);

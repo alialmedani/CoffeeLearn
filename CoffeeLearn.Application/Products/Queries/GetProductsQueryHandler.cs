@@ -20,8 +20,8 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 	public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
 	{
 		var query = _context.Products
-			.Include(x => x.Category)
-			.AsNoTracking()
+.Include(x => x.Category)
+.Include(x => x.Brand).AsNoTracking()
 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
@@ -33,6 +33,10 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 		if (request.CategoryId.HasValue)
 		{
 			query = query.Where(x => x.CategoryId == request.CategoryId.Value);
+		}
+		if (request.BrandId.HasValue)
+		{
+			query = query.Where(x => x.BrandId == request.BrandId.Value);
 		}
 
 		if (request.MinPrice.HasValue)

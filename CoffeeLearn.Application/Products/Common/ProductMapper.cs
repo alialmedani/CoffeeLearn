@@ -23,7 +23,9 @@ public static class ProductMapper
 			CreatedAt = product.CreatedAt,
 			UpdatedAt = product.UpdatedAt,
 			IsDeleted = product.IsDeleted,
-			DeletedAt = product.DeletedAt
+			DeletedAt = product.DeletedAt,
+			BrandId = product.BrandId,
+BrandName = product.Brand?.Name
 		};
 	}
 

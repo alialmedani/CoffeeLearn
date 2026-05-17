@@ -39,8 +39,17 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 		product.Description = request.Description;
 		product.ImageUrl = request.ImageUrl;
 		product.CategoryId = request.CategoryId;
+		product.BrandId = request.BrandId;
 
 		await _context.SaveChangesAsync(cancellationToken);
+		if (request.BrandId.HasValue)
+		{
+			var brandExists = await _context.Brands
+				.AnyAsync(x => x.Id == request.BrandId.Value, cancellationToken);
+
+			if (!brandExists)
+				throw new InvalidOperationException("Brand not found.");
+		}
 
 		return ProductMapper.ToDto(product);
 	}

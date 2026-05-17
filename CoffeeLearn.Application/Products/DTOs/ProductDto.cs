@@ -18,6 +18,9 @@ public class ProductDto
 	public int? CategoryId { get; set; }
 	public string? CategoryName { get; set; }
 
+	public int? BrandId { get; set; }
+	public string? BrandName { get; set; }
+
 	public ProductAvailabilityStatus AvailabilityStatus { get; set; }
 
 	public DateTime CreatedAt { get; set; }
