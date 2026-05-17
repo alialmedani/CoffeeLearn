@@ -19,7 +19,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<Product> Products => Set<Product>();
 	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-
+	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -66,7 +66,8 @@ public class AppDbContext : DbContext, IApplicationDbContext
 		{
 			entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
 			entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
-
+			entity.Property(x => x.Description).HasMaxLength(1000);
+			entity.Property(x => x.ImageUrl).HasMaxLength(500);
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
@@ -89,7 +90,43 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+		modelBuilder.Entity<UploadedFile>(entity =>
+		{
+			entity.Property(x => x.EntityId)
+				.HasMaxLength(100)
+				.IsRequired();
 
+			entity.Property(x => x.OriginalFileName)
+				.HasMaxLength(255)
+				.IsRequired();
+
+			entity.Property(x => x.StoredFileName)
+				.HasMaxLength(255)
+				.IsRequired();
+
+			entity.Property(x => x.ContentType)
+				.HasMaxLength(100)
+				.IsRequired();
+
+			entity.Property(x => x.FilePath)
+				.HasMaxLength(500)
+				.IsRequired();
+
+			entity.Property(x => x.FileUrl)
+				.HasMaxLength(500)
+				.IsRequired();
+
+			entity.Property(x => x.EntityType)
+				.IsRequired();
+
+			entity.Property(x => x.FilePlacement)
+				.IsRequired();
+
+			entity.Property(x => x.CreatedAt)
+				.IsRequired();
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
 		base.OnModelCreating(modelBuilder);
 	}
 }

@@ -15,6 +15,8 @@ public static class ProductMapper
 			Quantity = product.Quantity,
 			Price = product.Price,
 			IsActive = product.IsActive,
+			Description = product.Description,
+			ImageUrl = product.ImageUrl,
 			AvailabilityStatus = GetAvailabilityStatus(product),
 			CreatedAt = product.CreatedAt,
 			UpdatedAt = product.UpdatedAt,

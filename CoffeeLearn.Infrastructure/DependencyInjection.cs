@@ -18,7 +18,7 @@ public static class DependencyInjection
 			provider.GetRequiredService<AppDbContext>());
 
 		services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-
+		services.AddScoped<IFileStorageService, LocalFileStorageService>();
 		return services;
 	}
 }

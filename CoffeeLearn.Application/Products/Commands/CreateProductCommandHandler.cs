@@ -21,7 +21,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 		{
 			Name = request.Name,
 			Quantity = request.Quantity,
-			Price = request.Price
+			Price = request.Price,
+			Description = request.Description,
+			ImageUrl = request.ImageUrl,
 		};
 
 		_context.Products.Add(product);

@@ -12,6 +12,8 @@ public class ProductDto
 	public bool IsActive { get; set; }
 	public bool IsDeleted { get; set; }
 	public DateTime? DeletedAt { get; set; }
+	public string? Description { get; set; }
+	public string? ImageUrl { get; set; }
 	public ProductAvailabilityStatus AvailabilityStatus { get; set; }
 
 	public DateTime CreatedAt { get; set; }
