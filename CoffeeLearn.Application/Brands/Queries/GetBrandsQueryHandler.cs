@@ -33,28 +33,12 @@ public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, PagedResult
 			query = query.Where(x => x.IsActive == request.IsActive.Value);
 		}
 
-		query = request.SortBy?.ToLower() switch
-		{
-			"name" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.Name)
-				: query.OrderBy(x => x.Name),
+		query = BrandSortingHelper.ApplySorting(
+	query,
+	request.SortBy,
+	request.SortDirection);
 
-			"createdat" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.CreatedAt)
-				: query.OrderBy(x => x.CreatedAt),
 
-			"updatedat" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.UpdatedAt)
-				: query.OrderBy(x => x.UpdatedAt),
-
-			"isactive" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.IsActive)
-				: query.OrderBy(x => x.IsActive),
-
-			_ => query.OrderBy(x => x.Id)
-		};
-
-		
 
 		return await query.ToPagedResultAsync(
 	request.PageNumber,

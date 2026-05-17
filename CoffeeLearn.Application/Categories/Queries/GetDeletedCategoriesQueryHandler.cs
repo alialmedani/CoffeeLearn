@@ -23,25 +23,12 @@ public class GetDeletedCategoriesQueryHandler : IRequestHandler<GetDeletedCatego
 			.AsNoTracking()
 			.Where(x => x.IsDeleted)
 			.AsQueryable();
+		query = CategorySortingHelper.ApplySorting(
+			query,
+			request.SortBy,
+			request.SortDirection);
 
-		query = request.SortBy?.ToLower() switch
-		{
-			"name" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.Name)
-				: query.OrderBy(x => x.Name),
 
-			"createdat" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.CreatedAt)
-				: query.OrderBy(x => x.CreatedAt),
-
-			"updatedat" => request.SortDirection?.ToLower() == "desc"
-				? query.OrderByDescending(x => x.UpdatedAt)
-				: query.OrderBy(x => x.UpdatedAt),
-
-			_ => query.OrderByDescending(x => x.Id)
-		};
-
-	
 
 		return await query.ToPagedResultAsync(
 	request.PageNumber,
