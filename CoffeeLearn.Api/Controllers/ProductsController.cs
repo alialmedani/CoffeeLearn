@@ -4,6 +4,7 @@ using CoffeeLearn.Application.Products.Commands;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Application.Products.Queries;
 using CoffeeLearn.Application.Common.Models;
+
 namespace CoffeeLearn.Api.Controllers;
 
 [ApiController]
@@ -17,14 +18,8 @@ public class ProductsController : ControllerBase
 		_sender = sender;
 	}
 
-	//[HttpGet]
-	//public async Task<ActionResult<List<ProductDto>>> GetAll()
-	//{
-	//	var result = await _sender.Send(new GetProductsQuery());
-	//	return Ok(result);
-	//}
 	[HttpGet]
-	public async Task<ActionResult<CoffeeLearn.Application.Common.Models.PagedResult<ProductDto>>> GetAll([FromQuery] GetProductsQuery query)
+	public async Task<ActionResult<PagedResult<ProductDto>>> GetAll([FromQuery] GetProductsQuery query)
 	{
 		var result = await _sender.Send(query);
 		return Ok(result);
@@ -58,6 +53,28 @@ public class ProductsController : ControllerBase
 		command.Id = id;
 
 		var result = await _sender.Send(command);
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+
+	[HttpPut("{id:int}/activate")]
+	public async Task<ActionResult<ProductDto>> Activate(int id)
+	{
+		var result = await _sender.Send(new ActivateProductCommand(id));
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+
+	[HttpPut("{id:int}/deactivate")]
+	public async Task<ActionResult<ProductDto>> Deactivate(int id)
+	{
+		var result = await _sender.Send(new DeactivateProductCommand(id));
 
 		if (result is null)
 			return NotFound();

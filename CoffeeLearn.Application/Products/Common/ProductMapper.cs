@@ -13,8 +13,21 @@ public static class ProductMapper
 			Name = product.Name,
 			Quantity = product.Quantity,
 			Price = product.Price,
+			IsActive = product.IsActive,
+			AvailabilityStatus = GetAvailabilityStatus(product),
 			CreatedAt = product.CreatedAt,
 			UpdatedAt = product.UpdatedAt
 		};
+	}
+
+	private static string GetAvailabilityStatus(Product product)
+	{
+		if (!product.IsActive)
+			return "Inactive";
+
+		if (product.Quantity <= 0)
+			return "OutOfStock";
+
+		return "Active";
 	}
 }

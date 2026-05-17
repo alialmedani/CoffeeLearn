@@ -46,6 +46,12 @@ public static class OrderStockHelper
 		{
 			var product = products.First(x => x.Id == item.ProductId);
 
+			if (!product.IsActive)
+			{
+				throw new BusinessRuleException(
+					$"Product '{product.Name}' is inactive and cannot be ordered.");
+			}
+
 			if (product.Quantity < item.Quantity)
 			{
 				throw new BusinessRuleException(

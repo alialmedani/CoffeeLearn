@@ -7,7 +7,17 @@ public class Product : BaseEntity
 	public string Name { get; set; } = string.Empty;
 	public int Quantity { get; set; }
 	public decimal Price { get; set; }
+	public bool IsActive { get; set; } = true;
 
+	public void Activate()
+	{
+		IsActive = true;
+	}
+
+	public void Deactivate()
+	{
+		IsActive = false;
+	}
 	public void DecreaseStock(int quantity)
 	{
 		if (quantity <= 0)
