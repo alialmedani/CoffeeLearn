@@ -18,10 +18,17 @@ public static class OrderMapper
 			UpdatedAt = order.UpdatedAt,
 			AcceptedAt = order.AcceptedAt,
 			CompletedAt = order.CompletedAt,
+			CancelledAt = order.CancelledAt,
 			Items = order.Items.Select(i => new OrderItemDto
 			{
 				ProductId = i.ProductId,
 				ProductName = productNames.TryGetValue(i.ProductId, out var name) ? name : string.Empty,
+
+				ProductVariantId = i.ProductVariantId,
+				VariantColor = i.ProductVariant?.Color,
+				VariantSize = i.ProductVariant?.Size,
+				VariantSku = i.ProductVariant?.Sku,
+
 				Quantity = i.Quantity,
 				Price = i.Price
 			}).ToList()

@@ -14,6 +14,7 @@ public class Order : BaseEntity
 
 	public DateTime? AcceptedAt { get; set; }
 	public DateTime? CompletedAt { get; set; }
+	public DateTime? CancelledAt { get; set; }
 
 	public List<OrderItem> Items { get; set; } = new();
 
@@ -52,6 +53,7 @@ public class Order : BaseEntity
 			throw new InvalidOperationException("Order is already cancelled.");
 
 		Status = OrderStatus.Cancelled;
+		CancelledAt = DateTime.UtcNow;
 
 		MarkAsUpdated();
 	}

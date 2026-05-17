@@ -14,6 +14,7 @@ public class OrderDto
 
 	public DateTime? AcceptedAt { get; set; }
 	public DateTime? CompletedAt { get; set; }
+	public DateTime? CancelledAt { get; set; }
 
 	public List<OrderItemDto> Items { get; set; } = new();
 }

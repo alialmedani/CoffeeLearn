@@ -15,11 +15,13 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	{
 		_dateTimeProvider = dateTimeProvider;
 	}
-	public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
+
 	public DbSet<Product> Products => Set<Product>();
+	public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
 	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
+
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -64,10 +66,19 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	{
 		modelBuilder.Entity<Product>(entity =>
 		{
-			entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
-			entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
-			entity.Property(x => x.Description).HasMaxLength(1000);
-			entity.Property(x => x.ImageUrl).HasMaxLength(500);
+			entity.Property(x => x.Name)
+				.HasMaxLength(200)
+				.IsRequired();
+
+			entity.Property(x => x.Price)
+				.HasColumnType("decimal(18,2)");
+
+			entity.Property(x => x.Description)
+				.HasMaxLength(1000);
+
+			entity.Property(x => x.ImageUrl)
+				.HasMaxLength(500);
+
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
@@ -100,20 +111,11 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 		modelBuilder.Entity<Order>(entity =>
 		{
-			entity.Property(x => x.Status).IsRequired();
-			entity.Property(x => x.CreatedAt).IsRequired();
+			entity.Property(x => x.Status)
+				.IsRequired();
 
-			entity.HasMany(x => x.Items)
-				.WithOne(x => x.Order)
-				.HasForeignKey(x => x.OrderId)
-				.OnDelete(DeleteBehavior.Cascade);
-
-			entity.HasQueryFilter(x => !x.IsDeleted);
-		});
-		modelBuilder.Entity<Order>(entity =>
-		{
-			entity.Property(x => x.Status).IsRequired();
-			entity.Property(x => x.CreatedAt).IsRequired();
+			entity.Property(x => x.CreatedAt)
+				.IsRequired();
 
 			entity.HasMany(x => x.Items)
 				.WithOne(x => x.Order)
@@ -125,10 +127,17 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 		modelBuilder.Entity<OrderItem>(entity =>
 		{
-			entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
+			entity.Property(x => x.Price)
+				.HasColumnType("decimal(18,2)");
+
+			entity.HasOne(x => x.ProductVariant)
+				.WithMany()
+				.HasForeignKey(x => x.ProductVariantId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+
 		modelBuilder.Entity<UploadedFile>(entity =>
 		{
 			entity.Property(x => x.EntityId)
@@ -166,6 +175,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+
 		base.OnModelCreating(modelBuilder);
 	}
 }

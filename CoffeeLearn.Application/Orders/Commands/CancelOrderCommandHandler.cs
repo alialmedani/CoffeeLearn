@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
@@ -23,16 +25,50 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, Ord
 
 		OrderRules.EnsureCanCancel(order);
 
-		var requestedItems = order.Items
+		var productOnlyItems = order.Items
+			.Where(x => !x.ProductVariantId.HasValue)
 			.Select(x => (x.ProductId, x.Quantity))
 			.ToList();
 
-		var products = await OrderStockHelper.GetProductsForItemsOrThrowAsync(
-			_context,
-			requestedItems,
-			cancellationToken);
+		if (productOnlyItems.Count > 0)
+		{
+			var products = await OrderStockHelper.GetProductsForItemsOrThrowAsync(
+				_context,
+				productOnlyItems,
+				cancellationToken);
 
-		OrderStockHelper.RestoreStock(products, requestedItems);
+			OrderStockHelper.RestoreStock(products, productOnlyItems);
+		}
+
+		var variantItems = order.Items
+			.Where(x => x.ProductVariantId.HasValue)
+			.GroupBy(x => x.ProductVariantId!.Value)
+			.Select(g => new
+			{
+				ProductVariantId = g.Key,
+				Quantity = g.Sum(x => x.Quantity)
+			})
+			.ToList();
+
+		if (variantItems.Count > 0)
+		{
+			var variantIds = variantItems
+				.Select(x => x.ProductVariantId)
+				.ToList();
+
+			var variants = await _context.ProductVariants
+				.Where(x => variantIds.Contains(x.Id))
+				.ToListAsync(cancellationToken);
+
+			if (variants.Count != variantIds.Count)
+				throw new NotFoundException("One or more product variants do not exist.");
+
+			foreach (var item in variantItems)
+			{
+				var variant = variants.First(x => x.Id == item.ProductVariantId);
+				variant.IncreaseStock(item.Quantity);
+			}
+		}
 
 		order.Cancel();
 

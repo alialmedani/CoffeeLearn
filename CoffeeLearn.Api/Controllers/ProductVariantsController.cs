@@ -24,14 +24,48 @@ public class ProductVariantsController : ControllerBase
 		return Ok(result);
 	}
 
+	[HttpGet("{id:int}")]
+	public async Task<ActionResult<ProductVariantDto>> GetById(int id)
+	{
+		var result = await _sender.Send(new GetProductVariantByIdQuery(id));
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+
 	[HttpPost]
 	public async Task<ActionResult<ProductVariantDto>> Create([FromBody] CreateProductVariantCommand command)
 	{
 		var result = await _sender.Send(command);
 
 		return CreatedAtAction(
-			nameof(GetAll),
-			new { productId = result.ProductId },
+			nameof(GetById),
+			new { id = result.Id },
 			result);
+	}
+	[HttpPut("{id:int}")]
+	public async Task<ActionResult<ProductVariantDto>> Update(int id, [FromBody] UpdateProductVariantCommand command)
+	{
+		command.Id = id;
+
+		var result = await _sender.Send(command);
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+
+	[HttpDelete("{id:int}")]
+	public async Task<IActionResult> Delete(int id)
+	{
+		var result = await _sender.Send(new DeleteProductVariantCommand(id));
+
+		if (!result)
+			return NotFound();
+
+		return NoContent();
 	}
 }
