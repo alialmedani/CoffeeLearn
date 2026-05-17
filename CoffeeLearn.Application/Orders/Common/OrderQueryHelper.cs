@@ -13,7 +13,7 @@ public static class OrderQueryHelper
 		CancellationToken cancellationToken)
 	{
 		var order = await context.Orders
-			.Include(x => x.Items)
+			.IncludeOrderDetails()
 			.FirstOrDefaultAsync(x => x.Id == orderId, cancellationToken);
 
 		if (order is null)

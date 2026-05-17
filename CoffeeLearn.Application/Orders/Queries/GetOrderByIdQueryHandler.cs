@@ -18,9 +18,9 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
 	public async Task<OrderDto?> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
 	{
 		var order = await _context.Orders
-			.AsNoTracking()
-			.Include(x => x.Items)
-			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+		.AsNoTracking()
+		.IncludeOrderDetails()
+		.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (order is null)
 			return null;

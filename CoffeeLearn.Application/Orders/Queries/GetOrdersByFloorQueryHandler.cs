@@ -20,8 +20,8 @@ public class GetOrdersByFloorQueryHandler : IRequestHandler<GetOrdersByFloorQuer
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
-			.Where(x => x.FloorId == request.FloorId);
+.IncludeOrderDetails()
+.Where(x => x.FloorId == request.FloorId);
 
 		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "createdat");
 

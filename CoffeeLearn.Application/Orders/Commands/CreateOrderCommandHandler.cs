@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.Common;
@@ -53,68 +52,30 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 			OrderStockHelper.DeductStock(products, productOnlyItems);
 		}
 
-		var variantRequestItems = request.Items
+		var variantItems = request.Items
 			.Where(x => x.ProductVariantId.HasValue)
-			.Select(x => new
-			{
+			.Select(x => (
 				x.ProductId,
-				ProductVariantId = x.ProductVariantId!.Value,
-				x.Quantity
-			})
+				ProductVariantId: x.ProductVariantId!.Value,
+				x.Quantity))
 			.ToList();
 
 		var variants = new List<ProductVariant>();
 
-		if (variantRequestItems.Count > 0)
+		if (variantItems.Count > 0)
 		{
-			var variantIds = variantRequestItems
-				.Select(x => x.ProductVariantId)
-				.Distinct()
-				.ToList();
+			variants = await OrderVariantStockHelper.GetVariantsForItemsOrThrowAsync(
+				_context,
+				variantItems,
+				cancellationToken);
 
-			variants = await _context.ProductVariants
-				.Include(x => x.Product)
-				.Where(x => variantIds.Contains(x.Id))
-				.ToListAsync(cancellationToken);
+			OrderVariantStockHelper.EnsureVariantStockAvailability(
+				variants,
+				variantItems);
 
-			if (variants.Count != variantIds.Count)
-				throw new NotFoundException("One or more selected product variants do not exist.");
-
-			var requestedVariants = variantRequestItems
-				.GroupBy(x => new { x.ProductId, x.ProductVariantId })
-				.Select(g => new
-				{
-					g.Key.ProductId,
-					g.Key.ProductVariantId,
-					Quantity = g.Sum(x => x.Quantity)
-				})
-				.ToList();
-
-			foreach (var item in requestedVariants)
-			{
-				var variant = variants.First(x => x.Id == item.ProductVariantId);
-
-				if (variant.ProductId != item.ProductId)
-					throw new BusinessRuleException("Product variant does not belong to the selected product.");
-
-				if (!variant.IsActive)
-				{
-					throw new BusinessRuleException(
-						$"Product variant '{variant.Color} / {variant.Size}' is inactive and cannot be ordered.");
-				}
-
-				if (variant.Quantity < item.Quantity)
-				{
-					throw new BusinessRuleException(
-						$"Insufficient stock for variant '{variant.Color} / {variant.Size}'. Available: {variant.Quantity}, Requested: {item.Quantity}.");
-				}
-			}
-
-			foreach (var item in requestedVariants)
-			{
-				var variant = variants.First(x => x.Id == item.ProductVariantId);
-				variant.DecreaseStock(item.Quantity);
-			}
+			OrderVariantStockHelper.DeductVariantStock(
+				variants,
+				variantItems);
 		}
 
 		var variantsById = variants.ToDictionary(x => x.Id);

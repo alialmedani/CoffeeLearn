@@ -20,8 +20,8 @@ public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, PagedRe
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
-			.Where(x => x.UserId == request.UserId);
+.IncludeOrderDetails()
+.Where(x => x.UserId == request.UserId);
 
 		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "createdat");
 

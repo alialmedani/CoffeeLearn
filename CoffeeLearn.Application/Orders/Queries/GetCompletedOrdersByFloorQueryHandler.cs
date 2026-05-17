@@ -21,8 +21,8 @@ public class GetCompletedOrdersByFloorQueryHandler : IRequestHandler<GetComplete
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
-			.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Completed);
+.IncludeOrderDetails()
+.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Completed);
 
 		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "completedat");
 

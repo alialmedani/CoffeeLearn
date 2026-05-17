@@ -21,8 +21,8 @@ public class GetPendingOrdersByFloorQueryHandler : IRequestHandler<GetPendingOrd
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
-			.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Pending);
+.IncludeOrderDetails()
+.Where(x => x.FloorId == request.FloorId && x.Status == OrderStatus.Pending);
 
 		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "createdat");
 

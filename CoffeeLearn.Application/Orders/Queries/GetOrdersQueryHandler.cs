@@ -21,7 +21,6 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
 			.AsQueryable();
 
 		if (request.UserId.HasValue)
@@ -58,30 +57,15 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult
 			query = query.Where(x => x.Items.Any(i => matchingProductIds.Contains(i.ProductId)));
 		}
 
-		var sortBy = request.SortBy?.Trim().ToLower();
-		var sortDirection = request.SortDirection?.Trim().ToLower() ?? "desc";
-
-		query = (sortBy, sortDirection) switch
-		{
-			("id", "asc") => query.OrderBy(x => x.Id),
-			("id", _) => query.OrderByDescending(x => x.Id),
-
-			("acceptedat", "asc") => query.OrderBy(x => x.AcceptedAt),
-			("acceptedat", _) => query.OrderByDescending(x => x.AcceptedAt),
-
-			("completedat", "asc") => query.OrderBy(x => x.CompletedAt),
-			("completedat", _) => query.OrderByDescending(x => x.CompletedAt),
-
-			("status", "asc") => query.OrderBy(x => x.Status),
-			("status", _) => query.OrderByDescending(x => x.Status),
-
-			("createdat", "asc") => query.OrderBy(x => x.CreatedAt),
-			_ => query.OrderByDescending(x => x.CreatedAt)
-		};
+		query = OrderSortingHelper.ApplySorting(
+			query,
+			request.SortBy,
+			request.SortDirection);
 
 		var totalCount = await query.CountAsync(cancellationToken);
 
 		var orders = await query
+			.IncludeOrderDetails()
 			.Skip((request.PageNumber - 1) * request.PageSize)
 			.Take(request.PageSize)
 			.ToListAsync(cancellationToken);

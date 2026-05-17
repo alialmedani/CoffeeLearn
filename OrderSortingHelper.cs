@@ -10,18 +10,19 @@ public static class OrderSortingHelper
 		string? sortDirection,
 		string defaultSortBy = "createdat")
 	{
-		var finalSortBy = string.IsNullOrWhiteSpace(sortBy)
-			? defaultSortBy
-			: sortBy.Trim().ToLower();
+		var normalizedSortBy = sortBy?.Trim().ToLower() ?? defaultSortBy;
+		var normalizedSortDirection = sortDirection?.Trim().ToLower() ?? "desc";
 
-		var finalSortDirection = string.IsNullOrWhiteSpace(sortDirection)
-			? "desc"
-			: sortDirection.Trim().ToLower();
-
-		return (finalSortBy, finalSortDirection) switch
+		return (normalizedSortBy, normalizedSortDirection) switch
 		{
 			("id", "asc") => query.OrderBy(x => x.Id),
 			("id", _) => query.OrderByDescending(x => x.Id),
+
+			("createdat", "asc") => query.OrderBy(x => x.CreatedAt),
+			("createdat", _) => query.OrderByDescending(x => x.CreatedAt),
+
+			("updatedat", "asc") => query.OrderBy(x => x.UpdatedAt),
+			("updatedat", _) => query.OrderByDescending(x => x.UpdatedAt),
 
 			("acceptedat", "asc") => query.OrderBy(x => x.AcceptedAt),
 			("acceptedat", _) => query.OrderByDescending(x => x.AcceptedAt),
@@ -29,10 +30,12 @@ public static class OrderSortingHelper
 			("completedat", "asc") => query.OrderBy(x => x.CompletedAt),
 			("completedat", _) => query.OrderByDescending(x => x.CompletedAt),
 
+			("cancelledat", "asc") => query.OrderBy(x => x.CancelledAt),
+			("cancelledat", _) => query.OrderByDescending(x => x.CancelledAt),
+
 			("status", "asc") => query.OrderBy(x => x.Status),
 			("status", _) => query.OrderByDescending(x => x.Status),
 
-			("createdat", "asc") => query.OrderBy(x => x.CreatedAt),
 			_ => query.OrderByDescending(x => x.CreatedAt)
 		};
 	}

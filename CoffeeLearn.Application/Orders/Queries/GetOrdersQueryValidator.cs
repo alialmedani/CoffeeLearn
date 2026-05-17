@@ -25,10 +25,12 @@ public class GetOrdersQueryValidator : AbstractValidator<GetOrdersQuery>
 			.Must(x => string.IsNullOrWhiteSpace(x) ||
 					   x.Equals("id", StringComparison.OrdinalIgnoreCase) ||
 					   x.Equals("createdAt", StringComparison.OrdinalIgnoreCase) ||
+					   x.Equals("updatedAt", StringComparison.OrdinalIgnoreCase) ||
 					   x.Equals("acceptedAt", StringComparison.OrdinalIgnoreCase) ||
 					   x.Equals("completedAt", StringComparison.OrdinalIgnoreCase) ||
+					   x.Equals("cancelledAt", StringComparison.OrdinalIgnoreCase) ||
 					   x.Equals("status", StringComparison.OrdinalIgnoreCase))
-			.WithMessage("SortBy must be one of: id, createdAt, acceptedAt, completedAt, status.");
+			.WithMessage("SortBy must be one of: id, createdAt, updatedAt, acceptedAt, completedAt, cancelledAt, status.");
 
 		RuleFor(x => x.SortDirection)
 			.Must(x => string.IsNullOrWhiteSpace(x) ||

@@ -21,7 +21,7 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 	{
 		var query = _context.Orders
 			.AsNoTracking()
-			.Include(x => x.Items)
+			.IncludeOrderDetails()
 			.Where(x => x.AcceptedByOfficeBoyId == request.OfficeBoyId && x.Status == OrderStatus.Accepted);
 
 		query = OrderSortingHelper.ApplySorting(query, request.SortBy, request.SortDirection, "acceptedat");
