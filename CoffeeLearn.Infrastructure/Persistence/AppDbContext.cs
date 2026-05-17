@@ -24,7 +24,10 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	{
 		var entries = ChangeTracker
 			.Entries<BaseEntity>()
-			.Where(x => x.State == EntityState.Added || x.State == EntityState.Modified)
+			.Where(x =>
+				x.State == EntityState.Added ||
+				x.State == EntityState.Modified ||
+				x.State == EntityState.Deleted)
 			.ToList();
 
 		foreach (var entry in entries)
@@ -33,11 +36,22 @@ public class AppDbContext : DbContext, IApplicationDbContext
 			{
 				entry.Entity.CreatedAt = _dateTimeProvider.UtcNow;
 				entry.Entity.UpdatedAt = null;
+				entry.Entity.IsDeleted = false;
+				entry.Entity.DeletedAt = null;
 			}
 
 			if (entry.State == EntityState.Modified)
 			{
 				entry.Entity.UpdatedAt = _dateTimeProvider.UtcNow;
+
+				entry.Property(x => x.CreatedAt).IsModified = false;
+			}
+
+			if (entry.State == EntityState.Deleted)
+			{
+				entry.State = EntityState.Modified;
+
+				entry.Entity.MarkAsDeleted(_dateTimeProvider.UtcNow);
 
 				entry.Property(x => x.CreatedAt).IsModified = false;
 			}
@@ -52,6 +66,8 @@ public class AppDbContext : DbContext, IApplicationDbContext
 		{
 			entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
 			entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
 		modelBuilder.Entity<Order>(entity =>
@@ -63,11 +79,15 @@ public class AppDbContext : DbContext, IApplicationDbContext
 				.WithOne(x => x.Order)
 				.HasForeignKey(x => x.OrderId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
 		modelBuilder.Entity<OrderItem>(entity =>
 		{
 			entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
 		base.OnModelCreating(modelBuilder);

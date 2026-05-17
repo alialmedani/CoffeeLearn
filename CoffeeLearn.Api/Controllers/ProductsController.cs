@@ -92,4 +92,21 @@ public class ProductsController : ControllerBase
 
 		return NoContent();
 	}
+
+	[HttpPut("{id:int}/restore")]
+	public async Task<ActionResult<ProductDto>> Restore(int id)
+	{
+		var result = await _sender.Send(new RestoreProductCommand(id));
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+	[HttpGet("deleted")]
+	public async Task<ActionResult<PagedResult<ProductDto>>> GetDeleted([FromQuery] GetDeletedProductsQuery query)
+	{
+		var result = await _sender.Send(query);
+		return Ok(result);
+	}
 }

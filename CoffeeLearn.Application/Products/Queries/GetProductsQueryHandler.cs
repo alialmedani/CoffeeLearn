@@ -4,6 +4,7 @@ using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
+using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.Queries;
 
@@ -38,23 +39,32 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			query = query.Where(x => x.Price <= request.MaxPrice.Value);
 		}
 
-		var sortBy = request.SortBy?.Trim().ToLower();
-		var sortDirection = request.SortDirection?.Trim().ToLower() ?? "asc";
-
-		query = (sortBy, sortDirection) switch
+		if (request.IsActive.HasValue)
 		{
-			("name", "desc") => query.OrderByDescending(x => x.Name),
-			("name", _) => query.OrderBy(x => x.Name),
+			query = query.Where(x => x.IsActive == request.IsActive.Value);
+		}
 
-			("price", "desc") => query.OrderByDescending(x => x.Price),
-			("price", _) => query.OrderBy(x => x.Price),
+		if (request.AvailabilityStatus.HasValue)
+		{
+			query = request.AvailabilityStatus.Value switch
+			{
+				ProductAvailabilityStatus.Active =>
+					query.Where(x => x.IsActive && x.Quantity > 0),
 
-			("quantity", "desc") => query.OrderByDescending(x => x.Quantity),
-			("quantity", _) => query.OrderBy(x => x.Quantity),
+				ProductAvailabilityStatus.Inactive =>
+					query.Where(x => !x.IsActive),
 
-			("id", "desc") => query.OrderByDescending(x => x.Id),
-			_ => query.OrderBy(x => x.Id)
-		};
+				ProductAvailabilityStatus.OutOfStock =>
+					query.Where(x => x.IsActive && x.Quantity <= 0),
+
+				_ => query
+			};
+		}
+
+		query = ProductSortingHelper.ApplySorting(
+	query,
+	request.SortBy,
+	request.SortDirection);
 
 		var totalCount = await query.CountAsync(cancellationToken);
 

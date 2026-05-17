@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using MediatR;
 using CoffeeLearn.Application;
@@ -7,7 +8,12 @@ using CoffeeLearn.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+	.AddJsonOptions(options =>
+	{
+		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+	});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -32,8 +38,11 @@ if (app.Environment.IsDevelopment())
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoffeeLearn.Api v1");
 	});
 }
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
+
 app.MapControllers();
 
 app.Run();

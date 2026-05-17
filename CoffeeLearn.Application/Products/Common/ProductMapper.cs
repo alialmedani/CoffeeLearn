@@ -1,5 +1,6 @@
 ﻿using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.Common;
 
@@ -16,18 +17,23 @@ public static class ProductMapper
 			IsActive = product.IsActive,
 			AvailabilityStatus = GetAvailabilityStatus(product),
 			CreatedAt = product.CreatedAt,
-			UpdatedAt = product.UpdatedAt
+			UpdatedAt = product.UpdatedAt,
+			IsDeleted = product.IsDeleted,
+			DeletedAt = product.DeletedAt
 		};
 	}
 
-	private static string GetAvailabilityStatus(Product product)
+	private static ProductAvailabilityStatus GetAvailabilityStatus(Product product)
 	{
+		if (product.IsDeleted)
+			return ProductAvailabilityStatus.Deleted;
+
 		if (!product.IsActive)
-			return "Inactive";
+			return ProductAvailabilityStatus.Inactive;
 
 		if (product.Quantity <= 0)
-			return "OutOfStock";
+			return ProductAvailabilityStatus.OutOfStock;
 
-		return "Active";
+		return ProductAvailabilityStatus.Active;
 	}
 }

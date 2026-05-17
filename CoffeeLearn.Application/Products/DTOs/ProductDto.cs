@@ -1,4 +1,6 @@
-﻿namespace CoffeeLearn.Application.Products.DTOs;
+﻿using CoffeeLearn.Domain.Enums;
+
+namespace CoffeeLearn.Application.Products.DTOs;
 
 public class ProductDto
 {
@@ -8,8 +10,10 @@ public class ProductDto
 	public decimal Price { get; set; }
 
 	public bool IsActive { get; set; }
-	public string AvailabilityStatus { get; set; } = string.Empty;
+	public bool IsDeleted { get; set; }
+	public DateTime? DeletedAt { get; set; }
+	public ProductAvailabilityStatus AvailabilityStatus { get; set; }
+
 	public DateTime CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
-
 }
