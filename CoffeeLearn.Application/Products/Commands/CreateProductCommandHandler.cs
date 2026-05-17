@@ -27,10 +27,19 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 				throw new InvalidOperationException("Category not found.");
 		}
 
+		if (request.BrandId.HasValue)
+		{
+			var brandExists = await _context.Brands
+				.AnyAsync(x => x.Id == request.BrandId.Value, cancellationToken);
+
+			if (!brandExists)
+				throw new InvalidOperationException("Brand not found.");
+		}
+
 		var product = new Product
 		{
 			Name = request.Name,
-			Quantity = request.Quantity,
+			Quantity = 0,
 			Price = request.Price,
 			Description = request.Description,
 			ImageUrl = request.ImageUrl,
@@ -41,22 +50,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 		_context.Products.Add(product);
 		await _context.SaveChangesAsync(cancellationToken);
 
-		if (product.CategoryId.HasValue)
-		{
-			await _context.Products
-				.Include(x => x.Category)
-				.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
-		}
+		var createdProduct = await _context.Products
+			.Include(x => x.Category)
+			.Include(x => x.Brand)
+			.Include(x => x.Variants)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
 
-		if (request.BrandId.HasValue)
-		{
-			var brandExists = await _context.Brands
-				.AnyAsync(x => x.Id == request.BrandId.Value, cancellationToken);
-
-			if (!brandExists)
-				throw new InvalidOperationException("Brand not found.");
-		}
-
-		return ProductMapper.ToDto(product);
+		return ProductMapper.ToDto(createdProduct!);
 	}
 }

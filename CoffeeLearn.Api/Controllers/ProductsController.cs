@@ -109,5 +109,15 @@ public class ProductsController : ControllerBase
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
-	 
+	[HttpPost("create-with-variants")]
+	public async Task<ActionResult<ProductDto>> CreateWithVariants([FromBody] CreateProductWithVariantsCommand command)
+	{
+		var result = await _sender.Send(command);
+
+		return CreatedAtAction(
+			nameof(GetById),
+			new { id = result.Id },
+			result);
+	}
+
 }

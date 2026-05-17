@@ -19,6 +19,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 	{
 		var product = await _context.Products
 			.Include(x => x.Category)
+			.Include(x => x.Brand)
+			.Include(x => x.Variants)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (product is null)
@@ -33,15 +35,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 				throw new InvalidOperationException("Category not found.");
 		}
 
-		product.Name = request.Name;
-		product.Quantity = request.Quantity;
-		product.Price = request.Price;
-		product.Description = request.Description;
-		product.ImageUrl = request.ImageUrl;
-		product.CategoryId = request.CategoryId;
-		product.BrandId = request.BrandId;
-
-		await _context.SaveChangesAsync(cancellationToken);
 		if (request.BrandId.HasValue)
 		{
 			var brandExists = await _context.Brands
@@ -50,6 +43,15 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 			if (!brandExists)
 				throw new InvalidOperationException("Brand not found.");
 		}
+
+		product.Name = request.Name;
+		product.Price = request.Price;
+		product.Description = request.Description;
+		product.ImageUrl = request.ImageUrl;
+		product.CategoryId = request.CategoryId;
+		product.BrandId = request.BrandId;
+
+		await _context.SaveChangesAsync(cancellationToken);
 
 		return ProductMapper.ToDto(product);
 	}

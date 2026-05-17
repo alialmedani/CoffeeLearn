@@ -23,6 +23,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 	public DbSet<Category> Categories => Set<Category>();
 	public DbSet<Brand> Brands => Set<Brand>();
+
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -46,16 +47,13 @@ public class AppDbContext : DbContext, IApplicationDbContext
 			if (entry.State == EntityState.Modified)
 			{
 				entry.Entity.UpdatedAt = _dateTimeProvider.UtcNow;
-
 				entry.Property(x => x.CreatedAt).IsModified = false;
 			}
 
 			if (entry.State == EntityState.Deleted)
 			{
 				entry.State = EntityState.Modified;
-
 				entry.Entity.MarkAsDeleted(_dateTimeProvider.UtcNow);
-
 				entry.Property(x => x.CreatedAt).IsModified = false;
 			}
 		}
@@ -79,6 +77,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+
 		modelBuilder.Entity<Brand>(entity =>
 		{
 			entity.Property(x => x.Name)
@@ -93,6 +92,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
+
 		modelBuilder.Entity<Product>(entity =>
 		{
 			entity.Property(x => x.Name)
@@ -113,6 +113,11 @@ public class AppDbContext : DbContext, IApplicationDbContext
 				.HasForeignKey(x => x.CategoryId)
 				.OnDelete(DeleteBehavior.SetNull);
 
+			entity.HasOne(x => x.Brand)
+				.WithMany(x => x.Products)
+				.HasForeignKey(x => x.BrandId)
+				.OnDelete(DeleteBehavior.SetNull);
+
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
@@ -128,6 +133,9 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
 			entity.Property(x => x.Sku)
 				.HasMaxLength(100);
+
+			entity.Property(x => x.ImageUrl)
+				.HasMaxLength(500);
 
 			entity.Property(x => x.Quantity)
 				.IsRequired();

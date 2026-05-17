@@ -28,6 +28,7 @@ public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductV
 		variant.Size = request.Size.Trim();
 		variant.Quantity = request.Quantity;
 		variant.Sku = string.IsNullOrWhiteSpace(request.Sku) ? null : request.Sku.Trim();
+		variant.ImageUrl = string.IsNullOrWhiteSpace(request.ImageUrl) ? null : request.ImageUrl.Trim();
 		variant.IsActive = request.IsActive;
 
 		await _context.SaveChangesAsync(cancellationToken);

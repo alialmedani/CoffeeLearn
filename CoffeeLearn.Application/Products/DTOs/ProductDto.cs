@@ -21,6 +21,9 @@ public class ProductDto
 	public int? BrandId { get; set; }
 	public string? BrandName { get; set; }
 
+	public int TotalVariantStock { get; set; }
+	public int ActiveVariantCount { get; set; }
+
 	public ProductAvailabilityStatus AvailabilityStatus { get; set; }
 
 	public DateTime CreatedAt { get; set; }

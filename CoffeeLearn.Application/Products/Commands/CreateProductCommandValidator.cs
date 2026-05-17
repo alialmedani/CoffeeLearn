@@ -19,9 +19,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 			.When(x => !string.IsNullOrWhiteSpace(x.ImageUrl))
 			.WithMessage("ImageUrl must be a valid URL.");
 
-		RuleFor(x => x.Quantity)
-			.GreaterThanOrEqualTo(0);
-
 		RuleFor(x => x.Price)
 			.GreaterThanOrEqualTo(0);
 	}

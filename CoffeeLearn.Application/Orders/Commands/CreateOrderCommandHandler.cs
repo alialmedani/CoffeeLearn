@@ -19,6 +19,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 
 	public async Task<OrderDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
 	{
+		if (request.Items.Any(x => !x.ProductVariantId.HasValue))
+		{
+			throw new BusinessRuleException("ProductVariantId is required for all order items.");
+		}
+
 		var requestedProductItems = request.Items
 			.Select(x => (x.ProductId, x.Quantity))
 			.ToList();
@@ -41,42 +46,25 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 			}
 		}
 
-		var productOnlyItems = request.Items
-			.Where(x => !x.ProductVariantId.HasValue)
-			.Select(x => (x.ProductId, x.Quantity))
-			.ToList();
-
-		if (productOnlyItems.Count > 0)
-		{
-			OrderStockHelper.EnsureStockAvailability(products, productOnlyItems);
-			OrderStockHelper.DeductStock(products, productOnlyItems);
-		}
-
 		var variantItems = request.Items
-			.Where(x => x.ProductVariantId.HasValue)
 			.Select(x => (
 				x.ProductId,
 				ProductVariantId: x.ProductVariantId!.Value,
 				x.Quantity))
 			.ToList();
 
-		var variants = new List<ProductVariant>();
+		var variants = await OrderVariantStockHelper.GetVariantsForItemsOrThrowAsync(
+			_context,
+			variantItems,
+			cancellationToken);
 
-		if (variantItems.Count > 0)
-		{
-			variants = await OrderVariantStockHelper.GetVariantsForItemsOrThrowAsync(
-				_context,
-				variantItems,
-				cancellationToken);
+		OrderVariantStockHelper.EnsureVariantStockAvailability(
+			variants,
+			variantItems);
 
-			OrderVariantStockHelper.EnsureVariantStockAvailability(
-				variants,
-				variantItems);
-
-			OrderVariantStockHelper.DeductVariantStock(
-				variants,
-				variantItems);
-		}
+		OrderVariantStockHelper.DeductVariantStock(
+			variants,
+			variantItems);
 
 		var variantsById = variants.ToDictionary(x => x.Id);
 
@@ -90,18 +78,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 		foreach (var item in request.Items)
 		{
 			var product = productsById[item.ProductId];
-
-			ProductVariant? variant = null;
-
-			if (item.ProductVariantId.HasValue)
-			{
-				variant = variantsById[item.ProductVariantId.Value];
-			}
+			var variant = variantsById[item.ProductVariantId!.Value];
 
 			order.Items.Add(new OrderItem
 			{
 				ProductId = product.Id,
-				ProductVariantId = item.ProductVariantId,
+				ProductVariantId = variant.Id,
 				ProductVariant = variant,
 				Quantity = item.Quantity,
 				Price = product.Price

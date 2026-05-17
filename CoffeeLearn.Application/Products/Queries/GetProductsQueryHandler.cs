@@ -6,6 +6,7 @@ using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Enums;
 using CoffeeLearn.Application.Common.Extensions;
+
 namespace CoffeeLearn.Application.Products.Queries;
 
 public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedResult<ProductDto>>
@@ -20,8 +21,10 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 	public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
 	{
 		var query = _context.Products
-.Include(x => x.Category)
-.Include(x => x.Brand).AsNoTracking()
+			.Include(x => x.Category)
+			.Include(x => x.Brand)
+			.Include(x => x.Variants)
+			.AsNoTracking()
 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
@@ -34,6 +37,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 		{
 			query = query.Where(x => x.CategoryId == request.CategoryId.Value);
 		}
+
 		if (request.BrandId.HasValue)
 		{
 			query = query.Where(x => x.BrandId == request.BrandId.Value);
@@ -59,13 +63,17 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			query = request.AvailabilityStatus.Value switch
 			{
 				ProductAvailabilityStatus.Active =>
-					query.Where(x => x.IsActive && x.Quantity > 0),
+					query.Where(x =>
+						x.IsActive &&
+						x.Variants.Any(v => v.IsActive && !v.IsDeleted && v.Quantity > 0)),
 
 				ProductAvailabilityStatus.Inactive =>
 					query.Where(x => !x.IsActive),
 
 				ProductAvailabilityStatus.OutOfStock =>
-					query.Where(x => x.IsActive && x.Quantity <= 0),
+					query.Where(x =>
+						x.IsActive &&
+						!x.Variants.Any(v => v.IsActive && !v.IsDeleted && v.Quantity > 0)),
 
 				_ => query
 			};
@@ -77,9 +85,9 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			request.SortDirection);
 
 		return await query.ToPagedResultAsync(
-	request.PageNumber,
-	request.PageSize,
-	ProductMapper.ToDto,
-	cancellationToken);
+			request.PageNumber,
+			request.PageSize,
+			ProductMapper.ToDto,
+			cancellationToken);
 	}
 }

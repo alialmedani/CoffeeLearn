@@ -18,6 +18,9 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
 	public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
 	{
 		var product = await _context.Products
+			.Include(x => x.Category)
+			.Include(x => x.Brand)
+			.Include(x => x.Variants)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

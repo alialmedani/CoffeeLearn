@@ -16,6 +16,7 @@ public static class ProductVariantMapper
 			Size = variant.Size,
 			Quantity = variant.Quantity,
 			Sku = variant.Sku,
+			ImageUrl = variant.ImageUrl,
 			IsActive = variant.IsActive,
 			CreatedAt = variant.CreatedAt,
 			UpdatedAt = variant.UpdatedAt

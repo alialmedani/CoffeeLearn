@@ -23,8 +23,9 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 				.GreaterThan(0);
 
 			item.RuleFor(x => x.ProductVariantId)
-				.GreaterThan(0)
-				.When(x => x.ProductVariantId.HasValue);
+				.NotNull()
+				.WithMessage("ProductVariantId is required for clothing store orders.")
+				.GreaterThan(0);
 
 			item.RuleFor(x => x.Quantity)
 				.GreaterThan(0);

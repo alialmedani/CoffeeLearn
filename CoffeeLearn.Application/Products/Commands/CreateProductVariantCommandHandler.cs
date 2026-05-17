@@ -32,9 +32,9 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 			Size = request.Size.Trim(),
 			Quantity = request.Quantity,
 			Sku = string.IsNullOrWhiteSpace(request.Sku) ? null : request.Sku.Trim(),
+			ImageUrl = string.IsNullOrWhiteSpace(request.ImageUrl) ? null : request.ImageUrl.Trim(),
 			IsActive = request.IsActive
 		};
-
 		_context.ProductVariants.Add(variant);
 
 		await _context.SaveChangesAsync(cancellationToken);
