@@ -5,7 +5,7 @@ using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Enums;
-
+using CoffeeLearn.Application.Common.Extensions;
 namespace CoffeeLearn.Application.Products.Queries;
 
 public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedResult<ProductDto>>
@@ -76,23 +76,10 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			request.SortBy,
 			request.SortDirection);
 
-		var totalCount = await query.CountAsync(cancellationToken);
-
-		var products = await query
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize)
-			.ToListAsync(cancellationToken);
-
-		var items = products
-			.Select(ProductMapper.ToDto)
-			.ToList();
-
-		return new PagedResult<ProductDto>
-		{
-			Items = items,
-			TotalCount = totalCount,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize
-		};
+		return await query.ToPagedResultAsync(
+	request.PageNumber,
+	request.PageSize,
+	ProductMapper.ToDto,
+	cancellationToken);
 	}
 }

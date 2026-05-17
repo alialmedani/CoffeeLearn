@@ -4,7 +4,7 @@ using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-
+using CoffeeLearn.Application.Common.Extensions;
 namespace CoffeeLearn.Application.Brands.Queries;
 
 public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, PagedResult<BrandDto>>
@@ -54,23 +54,12 @@ public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, PagedResult
 			_ => query.OrderBy(x => x.Id)
 		};
 
-		var totalCount = await query.CountAsync(cancellationToken);
+		
 
-		var brands = await query
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize)
-			.ToListAsync(cancellationToken);
-
-		var items = brands
-			.Select(BrandMapper.ToDto)
-			.ToList();
-
-		return new PagedResult<BrandDto>
-		{
-			Items = items,
-			TotalCount = totalCount,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize
-		};
+		return await query.ToPagedResultAsync(
+	request.PageNumber,
+	request.PageSize,
+	BrandMapper.ToDto,
+	cancellationToken);
 	}
 }

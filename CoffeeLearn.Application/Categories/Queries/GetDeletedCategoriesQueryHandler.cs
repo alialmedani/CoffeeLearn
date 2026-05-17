@@ -4,7 +4,7 @@ using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-
+using CoffeeLearn.Application.Common.Extensions;
 namespace CoffeeLearn.Application.Categories.Queries;
 
 public class GetDeletedCategoriesQueryHandler : IRequestHandler<GetDeletedCategoriesQuery, PagedResult<CategoryDto>>
@@ -41,23 +41,12 @@ public class GetDeletedCategoriesQueryHandler : IRequestHandler<GetDeletedCatego
 			_ => query.OrderByDescending(x => x.Id)
 		};
 
-		var totalCount = await query.CountAsync(cancellationToken);
+	
 
-		var categories = await query
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize)
-			.ToListAsync(cancellationToken);
-
-		var items = categories
-			.Select(CategoryMapper.ToDto)
-			.ToList();
-
-		return new PagedResult<CategoryDto>
-		{
-			Items = items,
-			TotalCount = totalCount,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize
-		};
+		return await query.ToPagedResultAsync(
+	request.PageNumber,
+	request.PageSize,
+	CategoryMapper.ToDto,
+	cancellationToken);
 	}
 }
