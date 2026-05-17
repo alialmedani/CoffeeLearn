@@ -2,31 +2,29 @@
 
 namespace CoffeeLearn.Domain.Entities;
 
-public class Product : BaseEntity
+public class ProductVariant : BaseEntity
 {
-	public string Name { get; set; } = string.Empty;
-	public int Quantity { get; set; }
-	public decimal Price { get; set; }
-	public bool IsActive { get; set; } = true;
-	public string? Description { get; set; }
-	public string? ImageUrl { get; set; }
-	public List<ProductVariant> Variants { get; set; } = new();
-	public void Activate()
-	{
-		IsActive = true;
-	}
+	public int ProductId { get; set; }
 
-	public void Deactivate()
-	{
-		IsActive = false;
-	}
+	public Product Product { get; set; } = default!;
+
+	public string Color { get; set; } = string.Empty;
+
+	public string Size { get; set; } = string.Empty;
+
+	public int Quantity { get; set; }
+
+	public string? Sku { get; set; }
+
+	public bool IsActive { get; set; } = true;
+
 	public void DecreaseStock(int quantity)
 	{
 		if (quantity <= 0)
 			throw new InvalidOperationException("Quantity must be greater than zero.");
 
 		if (Quantity < quantity)
-			throw new InvalidOperationException("Insufficient stock.");
+			throw new InvalidOperationException("Insufficient variant stock.");
 
 		Quantity -= quantity;
 		MarkAsUpdated();
@@ -38,6 +36,18 @@ public class Product : BaseEntity
 			throw new InvalidOperationException("Quantity must be greater than zero.");
 
 		Quantity += quantity;
+		MarkAsUpdated();
+	}
+
+	public void Activate()
+	{
+		IsActive = true;
+		MarkAsUpdated();
+	}
+
+	public void Deactivate()
+	{
+		IsActive = false;
 		MarkAsUpdated();
 	}
 }

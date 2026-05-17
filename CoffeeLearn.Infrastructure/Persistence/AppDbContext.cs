@@ -15,7 +15,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	{
 		_dateTimeProvider = dateTimeProvider;
 	}
-
+	public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
 	public DbSet<Product> Products => Set<Product>();
 	public DbSet<Order> Orders => Set<Order>();
 	public DbSet<OrderItem> OrderItems => Set<OrderItem>();
@@ -71,6 +71,45 @@ public class AppDbContext : DbContext, IApplicationDbContext
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});
 
+		modelBuilder.Entity<ProductVariant>(entity =>
+		{
+			entity.Property(x => x.Color)
+				.HasMaxLength(100)
+				.IsRequired();
+
+			entity.Property(x => x.Size)
+				.HasMaxLength(50)
+				.IsRequired();
+
+			entity.Property(x => x.Sku)
+				.HasMaxLength(100);
+
+			entity.Property(x => x.Quantity)
+				.IsRequired();
+
+			entity.Property(x => x.IsActive)
+				.IsRequired();
+
+			entity.HasOne(x => x.Product)
+				.WithMany(x => x.Variants)
+				.HasForeignKey(x => x.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
+
+		modelBuilder.Entity<Order>(entity =>
+		{
+			entity.Property(x => x.Status).IsRequired();
+			entity.Property(x => x.CreatedAt).IsRequired();
+
+			entity.HasMany(x => x.Items)
+				.WithOne(x => x.Order)
+				.HasForeignKey(x => x.OrderId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
 		modelBuilder.Entity<Order>(entity =>
 		{
 			entity.Property(x => x.Status).IsRequired();
