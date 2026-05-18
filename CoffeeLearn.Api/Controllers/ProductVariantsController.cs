@@ -67,4 +67,34 @@ public class ProductVariantsController : ControllerBase
 
 		return NoContent();
 	}
+
+	[HttpPut("{id:int}/increase-stock")]
+	public async Task<ActionResult<ProductVariantDto>> IncreaseStock(
+	int id,
+	[FromBody] IncreaseProductVariantStockCommand command)
+	{
+		command.Id = id;
+
+		var result = await _sender.Send(command);
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
+
+	[HttpPut("{id:int}/decrease-stock")]
+	public async Task<ActionResult<ProductVariantDto>> DecreaseStock(
+		int id,
+		[FromBody] DecreaseProductVariantStockCommand command)
+	{
+		command.Id = id;
+
+		var result = await _sender.Send(command);
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
 }

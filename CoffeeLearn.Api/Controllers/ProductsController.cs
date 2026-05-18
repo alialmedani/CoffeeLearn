@@ -117,5 +117,15 @@ public class ProductsController : ControllerBase
 			new { id = result.Id },
 			result);
 	}
+	[HttpGet("{id:int}/details")]
+	public async Task<ActionResult<ProductDetailsDto>> GetDetails(int id)
+	{
+		var result = await _sender.Send(new GetProductDetailsQuery { Id = id });
+
+		if (result is null)
+			return NotFound();
+
+		return Ok(result);
+	}
 
 }
