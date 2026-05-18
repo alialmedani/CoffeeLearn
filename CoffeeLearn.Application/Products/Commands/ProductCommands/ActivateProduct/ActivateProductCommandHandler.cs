@@ -4,27 +4,26 @@ using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.ActivateProduct;
 
-public class RestoreProductCommandHandler : IRequestHandler<RestoreProductCommand, ProductDto?>
+public class ActivateProductCommandHandler : IRequestHandler<ActivateProductCommand, ProductDto?>
 {
 	private readonly IApplicationDbContext _context;
 
-	public RestoreProductCommandHandler(IApplicationDbContext context)
+	public ActivateProductCommandHandler(IApplicationDbContext context)
 	{
 		_context = context;
 	}
 
-	public async Task<ProductDto?> Handle(RestoreProductCommand request, CancellationToken cancellationToken)
+	public async Task<ProductDto?> Handle(ActivateProductCommand request, CancellationToken cancellationToken)
 	{
 		var product = await _context.Products
-			.IgnoreQueryFilters()
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (product is null)
 			return null;
 
-		product.Restore();
+		product.Activate();
 
 		await _context.SaveChangesAsync(cancellationToken);
 

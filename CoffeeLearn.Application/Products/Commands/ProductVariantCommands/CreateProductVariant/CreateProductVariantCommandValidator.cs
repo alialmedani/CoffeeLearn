@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.ProductVariant.CreateProductVariant;
 
 public class CreateProductVariantCommandValidator : AbstractValidator<CreateProductVariantCommand>
 {

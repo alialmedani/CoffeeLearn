@@ -4,7 +4,7 @@ using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.ProductVariant.UpdateProductVariant;
 
 public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductVariantCommand, ProductVariantDto?>
 {

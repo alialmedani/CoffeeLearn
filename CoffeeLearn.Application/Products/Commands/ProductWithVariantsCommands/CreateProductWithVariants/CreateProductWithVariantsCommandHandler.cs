@@ -6,7 +6,7 @@ using CoffeeLearn.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.ProductWithVariants.CreateProductWithVariants;
 
 public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreateProductWithVariantsCommand, ProductDto>
 {
@@ -48,7 +48,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 		if (duplicateVariants)
 			throw new BusinessRuleException("Duplicate color/size variants are not allowed for the same product.");
 
-		var product = new Product
+		var product = new CoffeeLearn.Domain.Entities.Product
 		{
 			Name = request.Name.Trim(),
 			Quantity = 0,
@@ -61,7 +61,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 
 		foreach (var item in request.Variants)
 		{
-			product.Variants.Add(new ProductVariant
+			product.Variants.Add(new CoffeeLearn.Domain.Entities.ProductVariant
 			{
 				Color = item.Color.Trim(),
 				Size = item.Size.Trim(),

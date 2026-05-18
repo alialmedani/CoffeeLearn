@@ -5,7 +5,7 @@ using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Entities;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.CreateProduct;
 
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {
@@ -36,7 +36,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 				throw new InvalidOperationException("Brand not found.");
 		}
 
-		var product = new Product
+		var product = new CoffeeLearn.Domain.Entities.Product
 		{
 			Name = request.Name,
 			Quantity = 0,

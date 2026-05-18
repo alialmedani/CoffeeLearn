@@ -5,8 +5,6 @@ using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Application.Products.Queries;
 using CoffeeLearn.Application.Common.Models;
 
-namespace CoffeeLearn.Api.Controllers;
-
 [ApiController]
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase

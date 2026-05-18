@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.UpdateProduct;
 
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
 {
-	public CreateProductCommandValidator()
+	public UpdateProductCommandValidator()
 	{
+		RuleFor(x => x.Id)
+			.GreaterThan(0);
+
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(200);
@@ -18,6 +21,9 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 			.Must(BeAValidUrl)
 			.When(x => !string.IsNullOrWhiteSpace(x.ImageUrl))
 			.WithMessage("ImageUrl must be a valid URL.");
+
+		RuleFor(x => x.Quantity)
+			.GreaterThanOrEqualTo(0);
 
 		RuleFor(x => x.Price)
 			.GreaterThanOrEqualTo(0);

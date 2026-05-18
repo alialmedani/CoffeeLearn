@@ -4,7 +4,7 @@ using CoffeeLearn.Application.Products.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.UpdateProduct;
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductDto?>
 {

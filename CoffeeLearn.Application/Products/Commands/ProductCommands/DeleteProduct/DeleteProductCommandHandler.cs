@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.DeleteProduct;
 
 public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
 {

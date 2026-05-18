@@ -6,7 +6,7 @@ using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Entities;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.ProductVariant.CreateProductVariant;
 
 public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductVariantCommand, ProductVariantDto>
 {
@@ -25,7 +25,7 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 		if (!productExists)
 			throw new NotFoundException("Product does not exist.");
 
-		var variant = new ProductVariant
+		var variant = new CoffeeLearn.Domain.Entities.ProductVariant
 		{
 			ProductId = request.ProductId,
 			Color = request.Color.Trim(),

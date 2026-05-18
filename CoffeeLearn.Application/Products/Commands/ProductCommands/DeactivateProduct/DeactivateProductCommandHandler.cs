@@ -4,18 +4,18 @@ using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
 
-namespace CoffeeLearn.Application.Products.Commands;
+namespace CoffeeLearn.Application.Products.Commands.Product.DeactivateProduct;
 
-public class ActivateProductCommandHandler : IRequestHandler<ActivateProductCommand, ProductDto?>
+public class DeactivateProductCommandHandler : IRequestHandler<DeactivateProductCommand, ProductDto?>
 {
 	private readonly IApplicationDbContext _context;
 
-	public ActivateProductCommandHandler(IApplicationDbContext context)
+	public DeactivateProductCommandHandler(IApplicationDbContext context)
 	{
 		_context = context;
 	}
 
-	public async Task<ProductDto?> Handle(ActivateProductCommand request, CancellationToken cancellationToken)
+	public async Task<ProductDto?> Handle(DeactivateProductCommand request, CancellationToken cancellationToken)
 	{
 		var product = await _context.Products
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -23,7 +23,7 @@ public class ActivateProductCommandHandler : IRequestHandler<ActivateProductComm
 		if (product is null)
 			return null;
 
-		product.Activate();
+		product.Deactivate();
 
 		await _context.SaveChangesAsync(cancellationToken);
 
