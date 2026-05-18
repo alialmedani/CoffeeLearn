@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Products.DTOs;
 
 namespace CoffeeLearn.Application.Products.Commands;
@@ -9,7 +9,7 @@ public class CreateProductVariantCommand : IRequest<ProductVariantDto>
 
 	public string Color { get; set; } = string.Empty;
 
-	public string Size { get; set; } = string.Empty;
+	public int? SizeOptionId { get; set; }
 
 	public int Quantity { get; set; }
 
@@ -19,3 +19,4 @@ public class CreateProductVariantCommand : IRequest<ProductVariantDto>
 
 	public bool IsActive { get; set; } = true;
 }
+

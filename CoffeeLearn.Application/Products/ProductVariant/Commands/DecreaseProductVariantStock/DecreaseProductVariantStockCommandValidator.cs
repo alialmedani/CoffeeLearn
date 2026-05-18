@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Products.Commands;
 
@@ -14,3 +14,7 @@ public class DecreaseProductVariantStockCommandValidator
 			.GreaterThan(0);
 	}
 }
+
+
+
+

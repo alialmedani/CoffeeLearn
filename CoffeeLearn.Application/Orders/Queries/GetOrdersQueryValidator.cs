@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Orders.Queries;
 
@@ -6,12 +6,13 @@ public class GetOrdersQueryValidator : AbstractValidator<GetOrdersQuery>
 {
 	public GetOrdersQueryValidator()
 	{
-		RuleFor(x => x.PageNumber)
-			.GreaterThan(0);
+		RuleFor(x => x.SkipCount)
+	.GreaterThanOrEqualTo(0);
 
-		RuleFor(x => x.PageSize)
+		RuleFor(x => x.MaxResultCount)
 			.GreaterThan(0)
-			.LessThanOrEqualTo(100);
+			.LessThanOrEqualTo(100)
+			.When(x => x.MaxResultCount.HasValue);
 
 		RuleFor(x => x.Status)
 			.Must(x => string.IsNullOrWhiteSpace(x) ||
@@ -39,3 +40,7 @@ public class GetOrdersQueryValidator : AbstractValidator<GetOrdersQuery>
 			.WithMessage("SortDirection must be either 'asc' or 'desc'.");
 	}
 }
+
+
+
+

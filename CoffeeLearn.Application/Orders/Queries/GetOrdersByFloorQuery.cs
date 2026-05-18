@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
@@ -9,3 +9,7 @@ public class GetOrdersByFloorQuery : OrderListQueryBase, IRequest<PagedResult<Or
 {
 	public Guid FloorId { get; set; }
 }
+
+
+
+

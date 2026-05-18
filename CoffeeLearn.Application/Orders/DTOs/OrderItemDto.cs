@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Orders.DTOs;
+namespace CoffeeLearn.Application.Orders.DTOs;
 
 public class OrderItemDto
 {
@@ -14,3 +14,7 @@ public class OrderItemDto
 
 	public decimal Price { get; set; }
 }
+
+
+
+

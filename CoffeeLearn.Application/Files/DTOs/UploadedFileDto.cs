@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Domain.Enums;
+using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Files.DTOs;
 
@@ -24,3 +24,7 @@ public class UploadedFileDto
 
 	public DateTime CreatedAt { get; set; }
 }
+
+
+
+

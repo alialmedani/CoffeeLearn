@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Products.DTOs;
+using CoffeeLearn.Application.Products.DTOs;
 using MediatR;
 
 namespace CoffeeLearn.Application.Products.Commands;
@@ -16,3 +16,7 @@ public class CreateProductWithVariantsCommand : IRequest<ProductDto>
 
 	public List<CreateProductWithVariantItemDto> Variants { get; set; } = new();
 }
+
+
+
+

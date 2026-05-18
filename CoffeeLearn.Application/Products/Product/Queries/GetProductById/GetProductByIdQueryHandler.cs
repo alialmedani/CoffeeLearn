@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
@@ -21,6 +21,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
 			.Include(x => x.Category)
 			.Include(x => x.Brand)
 			.Include(x => x.Variants)
+				.ThenInclude(x => x.SizeOption)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

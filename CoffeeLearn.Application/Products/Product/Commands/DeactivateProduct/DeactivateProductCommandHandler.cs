@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
@@ -30,3 +30,7 @@ public class DeactivateProductCommandHandler : IRequestHandler<DeactivateProduct
 		return ProductMapper.ToDto(product);
 	}
 }
+
+
+
+

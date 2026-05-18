@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Files.Common;
@@ -111,3 +111,7 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Uploa
 		return UploadedFileMapper.ToDto(uploadedFile);
 	}
 }
+
+
+
+

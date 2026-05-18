@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Orders.DTOs;
 
 namespace CoffeeLearn.Application.Orders.Commands;
@@ -10,3 +10,7 @@ public class CreateOrderCommand : IRequest<OrderDto>
 
 	public List<CreateOrderItemDto> Items { get; set; } = new();
 }
+
+
+
+

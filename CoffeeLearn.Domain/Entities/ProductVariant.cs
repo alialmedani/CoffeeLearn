@@ -10,8 +10,9 @@ public class ProductVariant : BaseEntity
 
 	public string Color { get; set; } = string.Empty;
 
-	public string Size { get; set; } = string.Empty;
+ 	public int? SizeOptionId { get; set; }
 
+	public SizeOption? SizeOption { get; set; }
 	public int Quantity { get; set; }
 
 	public string? Sku { get; set; }

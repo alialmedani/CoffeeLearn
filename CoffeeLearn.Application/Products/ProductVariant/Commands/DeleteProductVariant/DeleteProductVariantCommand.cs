@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 namespace CoffeeLearn.Application.Products.Commands;
 
@@ -11,3 +11,7 @@ public class DeleteProductVariantCommand : IRequest<bool>
 		Id = id;
 	}
 }
+
+
+
+

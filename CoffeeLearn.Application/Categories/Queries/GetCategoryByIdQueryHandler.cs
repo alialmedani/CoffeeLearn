@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Categories.Common;
+using CoffeeLearn.Application.Categories.Common;
 using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
@@ -19,8 +19,7 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
 	{
 		var category = await _context.Categories
 			.AsNoTracking()
-			.Include(x => x.SizeOptions)
-			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+ 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (category is null)
 			return null;
@@ -28,3 +27,7 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
 		return CategoryMapper.ToDto(category);
 	}
 }
+
+
+
+

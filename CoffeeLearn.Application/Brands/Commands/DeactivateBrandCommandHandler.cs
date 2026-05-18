@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Brands.Common;
+using CoffeeLearn.Application.Brands.Common;
 using CoffeeLearn.Application.Brands.DTOs;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
@@ -30,3 +30,7 @@ public class DeactivateBrandCommandHandler : IRequestHandler<DeactivateBrandComm
 		return BrandMapper.ToDto(brand);
 	}
 }
+
+
+
+

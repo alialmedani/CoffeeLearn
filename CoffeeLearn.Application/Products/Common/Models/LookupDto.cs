@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Common.Models;
+namespace CoffeeLearn.Application.Common.Models;
 
 public class LookupDto
 {
@@ -6,3 +6,7 @@ public class LookupDto
 	public string Name { get; set; } = string.Empty;
 	public string? Description { get; set; }
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Categories.Common;
 
@@ -33,3 +33,7 @@ public static class CategorySortingHelper
 		};
 	}
 }
+
+
+
+

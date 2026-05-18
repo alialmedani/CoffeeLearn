@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Domain.Enums;
+using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.DTOs;
 
@@ -29,3 +29,7 @@ public class ProductDto
 	public DateTime CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 }
+
+
+
+

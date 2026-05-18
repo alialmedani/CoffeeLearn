@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Orders.Common;
@@ -12,3 +12,7 @@ public static class OrderQueryableExtensions
 				.ThenInclude(x => x.ProductVariant);
 	}
 }
+
+
+
+

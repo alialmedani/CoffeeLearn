@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.Common;
@@ -99,3 +99,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 		return OrderMapper.ToDto(order, productNames);
 	}
 }
+
+
+
+

@@ -1,4 +1,5 @@
-﻿using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Reports.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +49,7 @@ public class GetLowStockVariantsQueryHandler : IRequestHandler<GetLowStockVarian
 
 				ProductVariantId = x.Id,
 				Color = x.Color,
-				Size = x.Size,
+				Size = ProductVariantDisplayHelper.GetSizeName(x),
 				Sku = x.Sku,
 
 				Quantity = x.Quantity,
@@ -57,3 +58,8 @@ public class GetLowStockVariantsQueryHandler : IRequestHandler<GetLowStockVarian
 			.ToListAsync(cancellationToken);
 	}
 }
+
+
+
+
+

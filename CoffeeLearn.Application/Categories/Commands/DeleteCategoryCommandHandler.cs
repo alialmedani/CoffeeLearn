@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,3 +27,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
 		return true;
 	}
 }
+
+
+
+

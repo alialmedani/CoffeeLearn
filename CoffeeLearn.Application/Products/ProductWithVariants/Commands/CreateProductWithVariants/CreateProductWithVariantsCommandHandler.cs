@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Common.Exceptions;
+using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
@@ -22,7 +22,6 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 			throw new BusinessRuleException("Category is required when creating product with variants.");
 
 		var category = await _context.Categories
-			.Include(x => x.SizeOptions)
 			.FirstOrDefaultAsync(x => x.Id == request.CategoryId.Value, cancellationToken);
 
 		if (category is null)
@@ -30,26 +29,6 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 
 		if (!category.IsActive)
 			throw new BusinessRuleException("Category is inactive.");
-
-		var activeSizeOptions = category.SizeOptions
-			.Where(x => x.IsActive)
-			.Select(x => x.SizeName.Trim().ToLower())
-			.ToHashSet();
-
-		if (!activeSizeOptions.Any())
-			throw new BusinessRuleException("Category does not have active size options.");
-
-		var invalidSizes = request.Variants
-			.Select(x => x.Size.Trim())
-			.Where(size => !activeSizeOptions.Contains(size.ToLower()))
-			.Distinct()
-			.ToList();
-
-		if (invalidSizes.Any())
-		{
-			throw new BusinessRuleException(
-				$"Invalid size option(s) for this category: {string.Join(", ", invalidSizes)}.");
-		}
 
 		if (request.BrandId.HasValue)
 		{
@@ -60,11 +39,30 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 				throw new BusinessRuleException("Brand not found.");
 		}
 
+		var sizeOptionIds = request.Variants
+			.Select(x => x.SizeOptionId!.Value)
+			.Distinct()
+			.ToList();
+
+		var sizeOptions = await _context.SizeOptions
+			.Include(x => x.SizeGroup)
+			.Where(x => sizeOptionIds.Contains(x.Id))
+			.ToListAsync(cancellationToken);
+
+		if (sizeOptions.Count != sizeOptionIds.Count)
+			throw new BusinessRuleException("One or more size options were not found.");
+
+		if (sizeOptions.Any(x => !x.IsActive))
+			throw new BusinessRuleException("One or more size options are inactive.");
+
+		if (sizeOptions.Any(x => x.SizeGroup.CategoryId != request.CategoryId.Value))
+			throw new BusinessRuleException("One or more size options do not belong to the selected category.");
+
 		var duplicateVariants = request.Variants
 			.GroupBy(x => new
 			{
 				Color = x.Color.Trim().ToLower(),
-				Size = x.Size.Trim().ToLower()
+				SizeOptionId = x.SizeOptionId
 			})
 			.Any(x => x.Count() > 1);
 
@@ -87,7 +85,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 			product.Variants.Add(new Domain.Entities.ProductVariant
 			{
 				Color = item.Color.Trim(),
-				Size = item.Size.Trim(),
+				SizeOptionId = item.SizeOptionId!.Value,
 				Quantity = item.Quantity,
 				Sku = string.IsNullOrWhiteSpace(item.Sku) ? null : item.Sku.Trim(),
 				ImageUrl = string.IsNullOrWhiteSpace(item.ImageUrl) ? null : item.ImageUrl.Trim(),
@@ -103,6 +101,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 			.Include(x => x.Category)
 			.Include(x => x.Brand)
 			.Include(x => x.Variants)
+				.ThenInclude(x => x.SizeOption)
 			.AsNoTracking()
 			.FirstAsync(x => x.Id == product.Id, cancellationToken);
 

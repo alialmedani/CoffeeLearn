@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Categories.Common;
+using CoffeeLearn.Application.Categories.Common;
 using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -21,8 +21,7 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 	{
 		var query = _context.Categories
 			.AsNoTracking()
-			.Include(x => x.SizeOptions)
-			.AsQueryable();
+ 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
 		{
@@ -41,9 +40,13 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 			request.SortDirection);
 
 		return await query.ToPagedResultAsync(
-			request.PageNumber,
-			request.PageSize,
+			request.SkipCount,
+request.MaxResultCount,
 			CategoryMapper.ToDto,
 			cancellationToken);
 	}
 }
+
+
+
+

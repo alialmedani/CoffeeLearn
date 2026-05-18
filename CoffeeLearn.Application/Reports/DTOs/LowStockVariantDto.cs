@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Reports.DTOs;
+namespace CoffeeLearn.Application.Reports.DTOs;
 
 public class LowStockVariantDto
 {
@@ -19,3 +19,7 @@ public class LowStockVariantDto
 	public int Quantity { get; set; }
 	public bool IsActive { get; set; }
 }
+
+
+
+

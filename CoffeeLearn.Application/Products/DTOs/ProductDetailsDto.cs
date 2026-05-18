@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.DTOs;
@@ -21,3 +21,7 @@ public class ProductDetailsDto
 
 	public List<ProductColorGroupDto> Colors { get; set; } = new();
 }
+
+
+
+

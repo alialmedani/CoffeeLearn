@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Enums;
@@ -17,10 +17,14 @@ public class GetProductsQuery : IRequest<PagedResult<ProductDto>>
 	public bool? IsActive { get; set; }
 	public ProductAvailabilityStatus? AvailabilityStatus { get; set; }
 
-	public int PageNumber { get; set; } = 1;
-	public int PageSize { get; set; } = 10;
+	public int SkipCount { get; set; } = 0;
+	public int? MaxResultCount { get; set; }
 
 	public string? SortBy { get; set; }
 	public string? SortDirection { get; set; } = "asc";
 	public int? BrandId { get; set; }
 }
+
+
+
+

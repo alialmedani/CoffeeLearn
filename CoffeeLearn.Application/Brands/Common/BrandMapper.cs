@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Brands.DTOs;
+using CoffeeLearn.Application.Brands.DTOs;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Brands.Common;
@@ -20,3 +20,7 @@ public static class BrandMapper
 		};
 	}
 }
+
+
+
+

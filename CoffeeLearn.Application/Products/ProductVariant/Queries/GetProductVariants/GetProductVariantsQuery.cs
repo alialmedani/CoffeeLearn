@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Products.DTOs;
 
 namespace CoffeeLearn.Application.Products.Queries;
@@ -9,3 +9,7 @@ public class GetProductVariantsQuery : IRequest<List<ProductVariantDto>>
 
 	public bool? IsActive { get; set; }
 }
+
+
+
+

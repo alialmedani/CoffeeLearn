@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Common.Exceptions;
+using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Domain.Entities;
 using CoffeeLearn.Domain.Enums;
 
@@ -42,3 +42,7 @@ public static class OrderRules
 			throw new BusinessRuleException("Completed orders cannot be cancelled.");
 	}
 }
+
+
+
+

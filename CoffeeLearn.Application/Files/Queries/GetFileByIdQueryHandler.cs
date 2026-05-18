@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Files.Common;
 using CoffeeLearn.Application.Files.DTOs;
@@ -27,3 +27,7 @@ public class GetFileByIdQueryHandler : IRequestHandler<GetFileByIdQuery, Uploade
 		return UploadedFileMapper.ToDto(file);
 	}
 }
+
+
+
+

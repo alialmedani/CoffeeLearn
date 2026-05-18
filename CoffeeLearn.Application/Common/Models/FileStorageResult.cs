@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Common.Models;
+namespace CoffeeLearn.Application.Common.Models;
 
 public class FileStorageResult
 {
@@ -10,3 +10,7 @@ public class FileStorageResult
 	public string FilePath { get; set; } = string.Empty;
 	public string FileUrl { get; set; } = string.Empty;
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Brands.Common;
+using CoffeeLearn.Application.Brands.Common;
 using CoffeeLearn.Application.Brands.DTOs;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -41,9 +41,13 @@ public class GetBrandsQueryHandler : IRequestHandler<GetBrandsQuery, PagedResult
 
 
 		return await query.ToPagedResultAsync(
-	request.PageNumber,
-	request.PageSize,
+request.SkipCount,
+request.MaxResultCount,
 	BrandMapper.ToDto,
 	cancellationToken);
 	}
 }
+
+
+
+

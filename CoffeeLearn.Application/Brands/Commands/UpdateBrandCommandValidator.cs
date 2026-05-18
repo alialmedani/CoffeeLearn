@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Brands.Commands;
 
@@ -17,3 +17,7 @@ public class UpdateBrandCommandValidator : AbstractValidator<UpdateBrandCommand>
 			.MaximumLength(1000);
 	}
 }
+
+
+
+

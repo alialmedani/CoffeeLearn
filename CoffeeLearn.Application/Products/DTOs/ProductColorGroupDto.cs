@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Products.DTOs;
+namespace CoffeeLearn.Application.Products.DTOs;
 
 public class ProductColorGroupDto
 {
@@ -9,3 +9,7 @@ public class ProductColorGroupDto
 
 	public List<ProductSizeStockDto> Sizes { get; set; } = new();
 }
+
+
+
+

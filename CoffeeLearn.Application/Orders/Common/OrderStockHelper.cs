@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Domain.Entities;
@@ -86,3 +86,7 @@ public static class OrderStockHelper
 		}
 	}
 }
+
+
+
+

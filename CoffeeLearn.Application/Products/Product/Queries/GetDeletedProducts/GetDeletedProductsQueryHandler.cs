@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -32,9 +32,13 @@ public class GetDeletedProductsQueryHandler : IRequestHandler<GetDeletedProducts
 	
 
 		return await query.ToPagedResultAsync(
-	request.PageNumber,
-	request.PageSize,
+	request.SkipCount,
+request.MaxResultCount,
 	ProductMapper.ToDto,
 	cancellationToken);
 	}
 }
+
+
+
+

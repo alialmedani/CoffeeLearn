@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Products.DTOs;
 
 namespace CoffeeLearn.Application.Products.Commands;
@@ -15,3 +15,7 @@ public class UpdateProductCommand : IRequest<ProductDto?>
 	public int? CategoryId { get; set; }
 	public int? BrandId { get; set; }
 }
+
+
+
+

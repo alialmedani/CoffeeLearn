@@ -2,31 +2,33 @@
 
 namespace CoffeeLearn.Domain.Entities;
 
-public class CategorySizeOption : BaseEntity
+public class SizeGroup : BaseEntity
 {
 	public int CategoryId { get; private set; }
 	public Category Category { get; private set; } = null!;
 
-	public string SizeName { get; private set; } = null!;
-	public int SortOrder { get; private set; }
+	public string Name { get; private set; } = null!;
+	public string? Description { get; private set; }
 	public bool IsActive { get; private set; }
 
-	private CategorySizeOption()
+	public List<SizeOption> SizeOptions { get; private set; } = new();
+
+	private SizeGroup()
 	{
 	}
 
-	public CategorySizeOption(int categoryId, string sizeName, int sortOrder = 0)
+	public SizeGroup(int categoryId, string name, string? description)
 	{
 		CategoryId = categoryId;
-		SizeName = sizeName;
-		SortOrder = sortOrder;
+		Name = name;
+		Description = description;
 		IsActive = true;
 	}
 
-	public void Update(string sizeName, int sortOrder)
+	public void Update(string name, string? description)
 	{
-		SizeName = sizeName;
-		SortOrder = sortOrder;
+		Name = name;
+		Description = description;
 		MarkAsUpdated();
 	}
 

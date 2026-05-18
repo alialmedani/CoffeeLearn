@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Files.DTOs;
+using CoffeeLearn.Application.Files.DTOs;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Files.Common;
@@ -22,3 +22,7 @@ public static class UploadedFileMapper
 		};
 	}
 }
+
+
+
+

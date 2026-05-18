@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Files.DTOs;
 using CoffeeLearn.Domain.Enums;
 
@@ -12,3 +12,7 @@ public class GetFilesByEntityQuery : IRequest<List<UploadedFileDto>>
 
 	public FilePlacement? FilePlacement { get; set; }
 }
+
+
+
+

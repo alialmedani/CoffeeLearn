@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Products.DTOs;
+namespace CoffeeLearn.Application.Products.DTOs;
 
 public class ProductVariantDto
 {
@@ -10,7 +10,9 @@ public class ProductVariantDto
 
 	public string Color { get; set; } = string.Empty;
 
-	public string Size { get; set; } = string.Empty;
+	public int? SizeOptionId { get; set; }
+
+	public string? SizeOptionName { get; set; }
 
 	public int Quantity { get; set; }
 
@@ -23,3 +25,4 @@ public class ProductVariantDto
 	public DateTime CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 }
+

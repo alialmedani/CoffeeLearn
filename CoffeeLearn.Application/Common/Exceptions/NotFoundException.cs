@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Common.Exceptions;
+namespace CoffeeLearn.Application.Common.Exceptions;
 
 public class NotFoundException : Exception
 {
@@ -6,3 +6,7 @@ public class NotFoundException : Exception
 	{
 	}
 }
+
+
+
+

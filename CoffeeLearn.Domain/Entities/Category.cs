@@ -9,8 +9,7 @@ public class Category : BaseEntity
 	public bool IsActive { get; private set; }
 
 	public List<Product> Products { get; private set; } = new();
-	public List<CategorySizeOption> SizeOptions { get; private set; } = new();
-
+	public List<SizeGroup> SizeGroups { get; private set; } = new();
 	private Category()
 	{
 	}

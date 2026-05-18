@@ -15,7 +15,8 @@ public class Product : BaseEntity
 	public Category? Category { get; set; }
 	public int? BrandId { get; set; }
 	public Brand? Brand { get; set; }
-
+	public int? SizeGroupId { get; set; }
+	public SizeGroup? SizeGroup { get; set; }
 	public List<ProductVariant> Variants { get; set; } = new();
 
 	public void Activate()

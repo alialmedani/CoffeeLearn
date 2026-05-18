@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Files.Common;
 using CoffeeLearn.Application.Files.DTOs;
@@ -38,3 +38,7 @@ public class GetFilesByEntityQueryHandler : IRequestHandler<GetFilesByEntityQuer
 			.ToList();
 	}
 }
+
+
+
+

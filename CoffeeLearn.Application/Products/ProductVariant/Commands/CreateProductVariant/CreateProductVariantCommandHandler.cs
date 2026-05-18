@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
@@ -20,7 +20,6 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 	{
 		var product = await _context.Products
 			.Include(x => x.Category)
-			.Include(x => x.Category!.SizeOptions)
 			.FirstOrDefaultAsync(x => x.Id == request.ProductId, cancellationToken);
 
 		if (product is null)
@@ -29,24 +28,27 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 		if (!product.CategoryId.HasValue || product.Category is null)
 			throw new BusinessRuleException("Product must have a category before adding variants.");
 
-		var activeSizeOptions = product.Category.SizeOptions
-			.Where(x => x.IsActive)
-			.Select(x => x.SizeName.Trim().ToLower())
-			.ToHashSet();
+		var sizeOption = await _context.SizeOptions
+			.Include(x => x.SizeGroup)
+			.FirstOrDefaultAsync(x => x.Id == request.SizeOptionId!.Value, cancellationToken);
 
-		if (!activeSizeOptions.Any())
-			throw new BusinessRuleException("Product category does not have active size options.");
+		if (sizeOption is null)
+			throw new BusinessRuleException("Size option not found.");
 
-		var requestedSize = request.Size.Trim();
+		if (!sizeOption.IsActive)
+			throw new BusinessRuleException("Size option is inactive.");
 
-		if (!activeSizeOptions.Contains(requestedSize.ToLower()))
-			throw new BusinessRuleException($"Invalid size option for this product category: {requestedSize}.");
+		if (sizeOption.SizeGroup.CategoryId != product.CategoryId)
+			throw new BusinessRuleException("Size option does not belong to the product category.");
+
+		var requestedSizeOptionId = request.SizeOptionId!.Value;
+		var requestedColor = request.Color.Trim();
 
 		var duplicateVariantExists = await _context.ProductVariants
 			.AnyAsync(x =>
 				x.ProductId == request.ProductId &&
-				x.Color.ToLower() == request.Color.Trim().ToLower() &&
-				x.Size.ToLower() == requestedSize.ToLower(),
+				x.Color.ToLower() == requestedColor.ToLower() &&
+				x.SizeOptionId == requestedSizeOptionId,
 				cancellationToken);
 
 		if (duplicateVariantExists)
@@ -55,8 +57,8 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 		var variant = new CoffeeLearn.Domain.Entities.ProductVariant
 		{
 			ProductId = request.ProductId,
-			Color = request.Color.Trim(),
-			Size = requestedSize,
+			Color = requestedColor,
+			SizeOptionId = requestedSizeOptionId,
 			Quantity = request.Quantity,
 			Sku = string.IsNullOrWhiteSpace(request.Sku) ? null : request.Sku.Trim(),
 			ImageUrl = string.IsNullOrWhiteSpace(request.ImageUrl) ? null : request.ImageUrl.Trim(),
@@ -70,6 +72,7 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 		var createdVariant = await _context.ProductVariants
 			.AsNoTracking()
 			.Include(x => x.Product)
+			.Include(x => x.SizeOption)
 			.FirstAsync(x => x.Id == variant.Id, cancellationToken);
 
 		return ProductVariantMapper.ToDto(createdVariant);

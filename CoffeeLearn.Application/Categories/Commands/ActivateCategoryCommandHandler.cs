@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Categories.Common;
+using CoffeeLearn.Application.Categories.Common;
 using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
@@ -30,3 +30,7 @@ public class ActivateCategoryCommandHandler : IRequestHandler<ActivateCategoryCo
 		return CategoryMapper.ToDto(category);
 	}
 }
+
+
+
+

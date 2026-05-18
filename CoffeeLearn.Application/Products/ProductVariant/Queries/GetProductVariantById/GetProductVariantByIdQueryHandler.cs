@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
@@ -28,3 +28,7 @@ public class GetProductVariantByIdQueryHandler : IRequestHandler<GetProductVaria
 		return ProductVariantMapper.ToDto(variant);
 	}
 }
+
+
+
+

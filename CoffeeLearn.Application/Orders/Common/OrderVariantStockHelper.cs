@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Common.Exceptions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Domain.Entities;
@@ -58,13 +59,13 @@ public static class OrderVariantStockHelper
 			if (!variant.IsActive)
 			{
 				throw new BusinessRuleException(
-					$"Product variant '{variant.Color} / {variant.Size}' is inactive and cannot be ordered.");
+					$"Product variant '{variant.Color} / {ProductVariantDisplayHelper.GetSizeName(variant)}' is inactive and cannot be ordered.");
 			}
 
 			if (variant.Quantity < item.Quantity)
 			{
 				throw new BusinessRuleException(
-					$"Insufficient stock for variant '{variant.Color} / {variant.Size}'. Available: {variant.Quantity}, Requested: {item.Quantity}.");
+					$"Insufficient stock for variant '{variant.Color} / {ProductVariantDisplayHelper.GetSizeName(variant)}'. Available: {variant.Quantity}, Requested: {item.Quantity}.");
 			}
 		}
 	}
@@ -95,3 +96,9 @@ public static class OrderVariantStockHelper
 		}
 	}
 }
+
+
+
+
+
+

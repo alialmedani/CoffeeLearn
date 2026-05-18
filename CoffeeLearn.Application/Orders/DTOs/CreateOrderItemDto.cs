@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Orders.DTOs;
+namespace CoffeeLearn.Application.Orders.DTOs;
 
 public class CreateOrderItemDto
 {
@@ -8,3 +8,7 @@ public class CreateOrderItemDto
 
 	public int Quantity { get; set; }
 }
+
+
+
+

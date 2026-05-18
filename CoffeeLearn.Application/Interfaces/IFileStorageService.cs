@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Application.Common.Models;
 
 namespace CoffeeLearn.Application.Interfaces;
 
@@ -14,3 +14,7 @@ public interface IFileStorageService
 
 	Task DeleteAsync(string filePath, CancellationToken cancellationToken);
 }
+
+
+
+

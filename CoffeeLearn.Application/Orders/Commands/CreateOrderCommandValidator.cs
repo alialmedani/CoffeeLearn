@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Orders.Commands;
 
@@ -32,3 +32,7 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 		});
 	}
 }
+
+
+
+

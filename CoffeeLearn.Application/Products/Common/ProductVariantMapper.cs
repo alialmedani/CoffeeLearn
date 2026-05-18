@@ -1,5 +1,4 @@
-﻿using CoffeeLearn.Application.Products.DTOs;
-using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Application.Products.DTOs;
 
 namespace CoffeeLearn.Application.Products.Common;
 
@@ -13,7 +12,8 @@ public static class ProductVariantMapper
 			ProductId = variant.ProductId,
 			ProductName = variant.Product?.Name ?? string.Empty,
 			Color = variant.Color,
-			Size = variant.Size,
+			SizeOptionId = variant.SizeOptionId,
+			SizeOptionName = ProductVariantDisplayHelper.GetSizeName(variant),
 			Quantity = variant.Quantity,
 			Sku = variant.Sku,
 			ImageUrl = variant.ImageUrl,
@@ -23,3 +23,5 @@ public static class ProductVariantMapper
 		};
 	}
 }
+
+

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Files.DTOs;
 using CoffeeLearn.Domain.Enums;
 
@@ -22,3 +22,7 @@ public class UploadFileCommand : IRequest<UploadedFileDto>
 
 	public long FileSize { get; set; }
 }
+
+
+
+

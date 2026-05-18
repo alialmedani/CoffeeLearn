@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
@@ -22,6 +22,7 @@ public class GetProductDetailsQueryHandler : IRequestHandler<GetProductDetailsQu
 			.Include(x => x.Category)
 			.Include(x => x.Brand)
 			.Include(x => x.Variants)
+				.ThenInclude(x => x.SizeOption)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -33,7 +34,7 @@ public class GetProductDetailsQueryHandler : IRequestHandler<GetProductDetailsQu
 		var variants = product.Variants
 			.Where(x => !x.IsDeleted)
 			.OrderBy(x => x.Color)
-			.ThenBy(x => x.Size)
+			.ThenBy(x => ProductVariantDisplayHelper.GetSizeName(x))
 			.ToList();
 
 		return new ProductDetailsDto
@@ -77,8 +78,9 @@ public class GetProductDetailsQueryHandler : IRequestHandler<GetProductDetailsQu
 						.Select(x => new ProductSizeStockDto
 						{
 							ProductVariantId = x.Id,
-							Size = x.Size,
+							Size = ProductVariantDisplayHelper.GetSizeName(x),
 							Quantity = x.Quantity,
+							SizeOptionId = x.SizeOptionId,
 							Sku = x.Sku,
 							ImageUrl = x.ImageUrl,
 							IsActive = x.IsActive

@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Products.Common;
 
@@ -40,3 +40,7 @@ public static class ProductSortingHelper
 		};
 	}
 }
+
+
+
+

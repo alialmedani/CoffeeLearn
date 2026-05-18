@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Domain.Enums;
@@ -60,3 +60,7 @@ public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, bool>
 		return true;
 	}
 }
+
+
+
+

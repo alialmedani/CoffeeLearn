@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Categories.DTOs;
+using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Common.Models;
 using MediatR;
 
@@ -9,9 +9,13 @@ public class GetCategoriesQuery : IRequest<PagedResult<CategoryDto>>
 	public string? Search { get; set; }
 	public bool? IsActive { get; set; }
 
-	public int PageNumber { get; set; } = 1;
-	public int PageSize { get; set; } = 10;
+	public int SkipCount { get; set; } = 0;
+	public int? MaxResultCount { get; set; }
 
 	public string? SortBy { get; set; }
 	public string? SortDirection { get; set; } = "asc";
 }
+
+
+
+

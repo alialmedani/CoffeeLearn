@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -24,6 +24,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			.Include(x => x.Category)
 			.Include(x => x.Brand)
 			.Include(x => x.Variants)
+				.ThenInclude(x => x.SizeOption)
 			.AsNoTracking()
 			.AsQueryable();
 
@@ -85,8 +86,8 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			request.SortDirection);
 
 		return await query.ToPagedResultAsync(
-			request.PageNumber,
-			request.PageSize,
+			request.SkipCount,
+			request.MaxResultCount,
 			ProductMapper.ToDto,
 			cancellationToken);
 	}

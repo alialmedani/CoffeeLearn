@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Categories.Commands;
 
@@ -14,3 +14,7 @@ public class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCo
 			.MaximumLength(1000);
 	}
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -29,8 +29,8 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 		var totalCount = await query.CountAsync(cancellationToken);
 
 		var orders = await query
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize)
+			.Skip(request.SkipCount)
+			.Take(request.MaxResultCount ?? 20)
 			.ToListAsync(cancellationToken);
 
 		var productNames = await OrderQueryHelper.GetProductNamesAsync(_context, cancellationToken);
@@ -38,9 +38,10 @@ public class GetAcceptedOrdersByOfficeBoyQueryHandler : IRequestHandler<GetAccep
 		return new PagedResult<OrderDto>
 		{
 			Items = orders.Select(x => OrderMapper.ToDto(x, productNames)).ToList(),
-			TotalCount = totalCount,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize
-		};
+			TotalCount = totalCount,		};
 	}
 }
+
+
+
+

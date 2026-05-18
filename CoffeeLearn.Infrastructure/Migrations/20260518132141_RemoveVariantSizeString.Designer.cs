@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeLearn.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260518093615_AddCategorySizeOptions")]
-    partial class AddCategorySizeOptions
+    [Migration("20260518132141_RemoveVariantSizeString")]
+    partial class RemoveVariantSizeString
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,48 +97,6 @@ namespace CoffeeLearn.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("CoffeeLearn.Domain.Entities.CategorySizeOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SizeName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId", "SizeName")
-                        .IsUnique();
-
-                    b.ToTable("CategorySizeOptions");
                 });
 
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.Order", b =>
@@ -276,6 +234,9 @@ namespace CoffeeLearn.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SizeGroupId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -284,6 +245,8 @@ namespace CoffeeLearn.Infrastructure.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("SizeGroupId");
 
                     b.ToTable("Products");
                 });
@@ -323,10 +286,8 @@ namespace CoffeeLearn.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("SizeOptionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Sku")
                         .HasMaxLength(100)
@@ -339,7 +300,89 @@ namespace CoffeeLearn.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("SizeOptionId");
+
                     b.ToTable("ProductVariants");
+                });
+
+            modelBuilder.Entity("CoffeeLearn.Domain.Entities.SizeGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SizeGroups");
+                });
+
+            modelBuilder.Entity("CoffeeLearn.Domain.Entities.SizeOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SizeGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SizeGroupId");
+
+                    b.ToTable("SizeOptions");
                 });
 
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.UploadedFile", b =>
@@ -406,17 +449,6 @@ namespace CoffeeLearn.Infrastructure.Migrations
                     b.ToTable("UploadedFiles");
                 });
 
-            modelBuilder.Entity("CoffeeLearn.Domain.Entities.CategorySizeOption", b =>
-                {
-                    b.HasOne("CoffeeLearn.Domain.Entities.Category", "Category")
-                        .WithMany("SizeOptions")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.OrderItem", b =>
                 {
                     b.HasOne("CoffeeLearn.Domain.Entities.Order", "Order")
@@ -447,9 +479,15 @@ namespace CoffeeLearn.Infrastructure.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("CoffeeLearn.Domain.Entities.SizeGroup", "SizeGroup")
+                        .WithMany()
+                        .HasForeignKey("SizeGroupId");
+
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
+
+                    b.Navigation("SizeGroup");
                 });
 
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.ProductVariant", b =>
@@ -460,7 +498,36 @@ namespace CoffeeLearn.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CoffeeLearn.Domain.Entities.SizeOption", "SizeOption")
+                        .WithMany()
+                        .HasForeignKey("SizeOptionId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("Product");
+
+                    b.Navigation("SizeOption");
+                });
+
+            modelBuilder.Entity("CoffeeLearn.Domain.Entities.SizeGroup", b =>
+                {
+                    b.HasOne("CoffeeLearn.Domain.Entities.Category", "Category")
+                        .WithMany("SizeGroups")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("CoffeeLearn.Domain.Entities.SizeOption", b =>
+                {
+                    b.HasOne("CoffeeLearn.Domain.Entities.SizeGroup", "SizeGroup")
+                        .WithMany("SizeOptions")
+                        .HasForeignKey("SizeGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SizeGroup");
                 });
 
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.Brand", b =>
@@ -472,7 +539,7 @@ namespace CoffeeLearn.Infrastructure.Migrations
                 {
                     b.Navigation("Products");
 
-                    b.Navigation("SizeOptions");
+                    b.Navigation("SizeGroups");
                 });
 
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.Order", b =>
@@ -483,6 +550,11 @@ namespace CoffeeLearn.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeLearn.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("CoffeeLearn.Domain.Entities.SizeGroup", b =>
+                {
+                    b.Navigation("SizeOptions");
                 });
 #pragma warning restore 612, 618
         }

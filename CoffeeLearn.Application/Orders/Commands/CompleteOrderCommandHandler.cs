@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
@@ -32,3 +32,7 @@ public class CompleteOrderCommandHandler : IRequestHandler<CompleteOrderCommand,
 		return OrderMapper.ToDto(order, productNames);
 	}
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿namespace CoffeeLearn.Application.Brands.DTOs;
+namespace CoffeeLearn.Application.Brands.DTOs;
 
 public class BrandDto
 {
@@ -11,3 +11,7 @@ public class BrandDto
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
 }
+
+
+
+

@@ -1,9 +1,8 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
-using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Products.Commands;
 
@@ -54,9 +53,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 			.Include(x => x.Category)
 			.Include(x => x.Brand)
 			.Include(x => x.Variants)
+				.ThenInclude(x => x.SizeOption)
 			.AsNoTracking()
-			.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
+			.FirstAsync(x => x.Id == product.Id, cancellationToken);
 
-		return ProductMapper.ToDto(createdProduct!);
+		return ProductMapper.ToDto(createdProduct);
 	}
 }

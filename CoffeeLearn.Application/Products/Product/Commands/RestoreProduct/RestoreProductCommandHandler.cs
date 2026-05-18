@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
@@ -31,3 +31,7 @@ public class RestoreProductCommandHandler : IRequestHandler<RestoreProductComman
 		return ProductMapper.ToDto(product);
 	}
 }
+
+
+
+

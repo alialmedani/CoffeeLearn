@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Interfaces;
 
@@ -28,3 +28,7 @@ public class DeleteProductVariantCommandHandler : IRequestHandler<DeleteProductV
 		return true;
 	}
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 
 namespace CoffeeLearn.Application.Common.Behaviors;
@@ -39,3 +39,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 		return await next();
 	}
 }
+
+
+
+

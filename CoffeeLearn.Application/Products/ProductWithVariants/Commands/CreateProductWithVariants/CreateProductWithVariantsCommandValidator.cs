@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Products.Commands;
 
@@ -33,9 +33,9 @@ public class CreateProductWithVariantsCommandValidator : AbstractValidator<Creat
 				.NotEmpty()
 				.MaximumLength(100);
 
-			variant.RuleFor(x => x.Size)
-				.NotEmpty()
-				.MaximumLength(50);
+			variant.RuleFor(x => x.SizeOptionId)
+				.NotNull()
+				.GreaterThan(0);
 
 			variant.RuleFor(x => x.Quantity)
 				.GreaterThanOrEqualTo(0);
@@ -57,3 +57,7 @@ public class CreateProductWithVariantsCommandValidator : AbstractValidator<Creat
 			&& (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
 	}
 }
+
+
+
+

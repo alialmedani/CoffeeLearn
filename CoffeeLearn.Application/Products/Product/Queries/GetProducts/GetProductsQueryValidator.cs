@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Products.Queries;
 
@@ -6,12 +6,13 @@ public class GetProductsQueryValidator : AbstractValidator<GetProductsQuery>
 {
 	public GetProductsQueryValidator()
 	{
-		RuleFor(x => x.PageNumber)
-			.GreaterThan(0);
+		RuleFor(x => x.SkipCount)
+	.GreaterThanOrEqualTo(0);
 
-		RuleFor(x => x.PageSize)
+		RuleFor(x => x.MaxResultCount)
 			.GreaterThan(0)
-			.LessThanOrEqualTo(100);
+			.LessThanOrEqualTo(100)
+			.When(x => x.MaxResultCount.HasValue);
 
 		RuleFor(x => x.MinPrice)
 			.GreaterThanOrEqualTo(0)
@@ -40,3 +41,7 @@ public class GetProductsQueryValidator : AbstractValidator<GetProductsQuery>
 			.WithMessage("SortDirection must be either 'asc' or 'desc'.");
 	}
 }
+
+
+
+

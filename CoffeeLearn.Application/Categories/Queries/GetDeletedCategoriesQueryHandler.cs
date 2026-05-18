@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Categories.Common;
+using CoffeeLearn.Application.Categories.Common;
 using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -31,9 +31,13 @@ public class GetDeletedCategoriesQueryHandler : IRequestHandler<GetDeletedCatego
 
 
 		return await query.ToPagedResultAsync(
-	request.PageNumber,
-	request.PageSize,
+request.SkipCount,
+request.MaxResultCount,
 	CategoryMapper.ToDto,
 	cancellationToken);
 	}
 }
+
+
+
+

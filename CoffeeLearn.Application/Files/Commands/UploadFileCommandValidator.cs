@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Files.Commands;
@@ -137,3 +137,7 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 		return AttachmentExtensions.Contains(extension);
 	}
 }
+
+
+
+

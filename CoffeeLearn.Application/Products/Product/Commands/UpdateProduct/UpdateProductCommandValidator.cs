@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CoffeeLearn.Application.Products.Commands;
 
@@ -35,3 +35,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 			&& (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
 	}
 }
+
+
+
+

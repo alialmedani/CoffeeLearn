@@ -1,4 +1,5 @@
-﻿using CoffeeLearn.Application.Orders.DTOs;
+using CoffeeLearn.Application.Orders.DTOs;
+using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Orders.Common;
@@ -26,7 +27,7 @@ public static class OrderMapper
 
 				ProductVariantId = i.ProductVariantId,
 				VariantColor = i.ProductVariant?.Color,
-				VariantSize = i.ProductVariant?.Size,
+				VariantSize = i.ProductVariant == null ? string.Empty : ProductVariantDisplayHelper.GetSizeName(i.ProductVariant),
 				VariantSku = i.ProductVariant?.Sku,
 
 				Quantity = i.Quantity,
@@ -35,3 +36,9 @@ public static class OrderMapper
 		};
 	}
 }
+
+
+
+
+
+

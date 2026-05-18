@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Products.DTOs;
+using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.Common;
@@ -53,3 +53,7 @@ public static class ProductMapper
 		return ProductAvailabilityStatus.Active;
 	}
 }
+
+
+
+

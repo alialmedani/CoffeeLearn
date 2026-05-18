@@ -1,36 +1,43 @@
-﻿using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeLearn.Application.Common.Extensions;
 
 public static class QueryableExtensions
 {
+	private const int DefaultMaxResultCount = 20;
+	private const int MaxAllowedResultCount = 100;
+
 	public static async Task<PagedResult<TDto>> ToPagedResultAsync<TEntity, TDto>(
 		this IQueryable<TEntity> query,
-		int pageNumber,
-		int pageSize,
+		int skipCount,
+		int? maxResultCount,
 		Func<TEntity, TDto> mapper,
 		CancellationToken cancellationToken = default)
 	{
-		if (pageNumber <= 0)
-			pageNumber = 1;
+		if (skipCount < 0)
+			skipCount = 0;
 
-		if (pageSize <= 0)
-			pageSize = 10;
+		var take = maxResultCount ?? DefaultMaxResultCount;
+
+		if (take <= 0)
+			take = DefaultMaxResultCount;
+
+		if (take > MaxAllowedResultCount)
+			take = MaxAllowedResultCount;
 
 		var totalCount = await query.CountAsync(cancellationToken);
 
 		var items = await query
-			.Skip((pageNumber - 1) * pageSize)
-			.Take(pageSize)
+			.Skip(skipCount)
+			.Take(take)
 			.ToListAsync(cancellationToken);
 
 		return new PagedResult<TDto>
 		{
 			Items = items.Select(mapper).ToList(),
-			TotalCount = totalCount,
-			PageNumber = pageNumber,
-			PageSize = pageSize
+			TotalCount = totalCount
 		};
 	}
 }
+

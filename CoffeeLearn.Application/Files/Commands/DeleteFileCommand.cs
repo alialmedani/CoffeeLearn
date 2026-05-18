@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 namespace CoffeeLearn.Application.Files.Commands;
 
@@ -11,3 +11,7 @@ public class DeleteFileCommand : IRequest<bool>
 		Id = id;
 	}
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Interfaces;
@@ -13,9 +13,13 @@ public interface IApplicationDbContext
 
 	DbSet<Brand> Brands { get; }
 	DbSet<Category> Categories { get; }
-	DbSet<CategorySizeOption> CategorySizeOptions { get; }
-
+	DbSet<SizeGroup> SizeGroups { get; }
+	DbSet<SizeOption> SizeOptions { get; }
 	DbSet<UploadedFile> UploadedFiles { get; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Domain.Entities;
 
 namespace CoffeeLearn.Application.Brands.Common;
 
@@ -33,3 +33,7 @@ public static class BrandSortingHelper
 		};
 	}
 }
+
+
+
+

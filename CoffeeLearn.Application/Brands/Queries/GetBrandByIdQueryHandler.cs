@@ -1,4 +1,4 @@
-﻿using CoffeeLearn.Application.Brands.Common;
+using CoffeeLearn.Application.Brands.Common;
 using CoffeeLearn.Application.Brands.DTOs;
 using CoffeeLearn.Application.Interfaces;
 using MediatR;
@@ -27,3 +27,7 @@ public class GetBrandByIdQueryHandler : IRequestHandler<GetBrandByIdQuery, Brand
 		return BrandMapper.ToDto(brand);
 	}
 }
+
+
+
+

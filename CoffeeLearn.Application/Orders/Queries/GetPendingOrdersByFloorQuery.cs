@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Orders.Common;
 using CoffeeLearn.Application.Orders.DTOs;
@@ -9,3 +9,7 @@ public class GetPendingOrdersByFloorQuery : OrderListQueryBase, IRequest<PagedRe
 {
 	public Guid FloorId { get; set; }
 }
+
+
+
+
