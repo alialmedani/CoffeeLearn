@@ -5,7 +5,7 @@ namespace CoffeeLearn.Application.Products.Common;
 
 public static class ProductVariantMapper
 {
-	public static ProductVariantDto ToDto(ProductVariant variant)
+	public static ProductVariantDto ToDto(CoffeeLearn.Domain.Entities.ProductVariant variant)
 	{
 		return new ProductVariantDto
 		{

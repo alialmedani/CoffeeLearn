@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using CoffeeLearn.Application.Products.Commands;
 using CoffeeLearn.Application.Products.DTOs;
 using CoffeeLearn.Application.Products.Queries;
-
 namespace CoffeeLearn.Api.Controllers;
 
 [ApiController]

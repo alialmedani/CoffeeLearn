@@ -1,12 +1,11 @@
 ﻿using CoffeeLearn.Application.Products.DTOs;
-using CoffeeLearn.Domain.Entities;
 using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.Common;
 
 public static class ProductMapper
 {
-	public static ProductDto ToDto(Product product)
+	public static ProductDto ToDto(CoffeeLearn.Domain.Entities.Product product)
 	{
 		var activeVariants = product.Variants
 			.Where(x => x.IsActive && !x.IsDeleted)
@@ -37,7 +36,7 @@ public static class ProductMapper
 		};
 	}
 
-	private static ProductAvailabilityStatus GetAvailabilityStatus(Product product)
+	private static ProductAvailabilityStatus GetAvailabilityStatus(CoffeeLearn.Domain.Entities.Product product)
 	{
 		if (product.IsDeleted)
 			return ProductAvailabilityStatus.Deleted;

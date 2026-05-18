@@ -4,8 +4,8 @@ namespace CoffeeLearn.Application.Products.Common;
 
 public static class ProductSortingHelper
 {
-	public static IQueryable<Product> ApplySorting(
-		IQueryable<Product> query,
+	public static IQueryable<CoffeeLearn.Domain.Entities.Product> ApplySorting(
+	IQueryable<CoffeeLearn.Domain.Entities.Product> query,
 		string? sortBy,
 		string? sortDirection)
 	{
