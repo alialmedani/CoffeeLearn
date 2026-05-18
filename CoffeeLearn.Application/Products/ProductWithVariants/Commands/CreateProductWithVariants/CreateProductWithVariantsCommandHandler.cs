@@ -1,4 +1,5 @@
 using CoffeeLearn.Application.Common.Exceptions;
+using CoffeeLearn.Application.Common.Extensions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
@@ -61,7 +62,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 		var duplicateVariants = request.Variants
 			.GroupBy(x => new
 			{
-				Color = x.Color.Trim().ToLower(),
+				Color = x.Color.NormalizeText(),
 				SizeOptionId = x.SizeOptionId
 			})
 			.Any(x => x.Count() > 1);
@@ -98,13 +99,11 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 		await _context.SaveChangesAsync(cancellationToken);
 
 		var createdProduct = await _context.Products
-			.Include(x => x.Category)
-			.Include(x => x.Brand)
-			.Include(x => x.Variants)
-				.ThenInclude(x => x.SizeOption)
+			.IncludeProductDetails()
 			.AsNoTracking()
 			.FirstAsync(x => x.Id == product.Id, cancellationToken);
 
 		return ProductMapper.ToDto(createdProduct);
 	}
 }
+

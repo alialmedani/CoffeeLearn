@@ -28,3 +28,5 @@ public class UpdateProductVariantCommandValidator : AbstractValidator<UpdateProd
 	}
 }
 
+
+

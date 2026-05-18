@@ -18,10 +18,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 	public async Task<ProductDto?> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
 	{
 		var product = await _context.Products
-			.Include(x => x.Category)
-			.Include(x => x.Brand)
-			.Include(x => x.Variants)
-				.ThenInclude(x => x.SizeOption)
+			.IncludeProductDetails()
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (product is null)
@@ -57,3 +54,4 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 		return ProductMapper.ToDto(product);
 	}
 }
+

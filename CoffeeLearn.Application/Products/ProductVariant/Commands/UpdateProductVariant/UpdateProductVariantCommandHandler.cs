@@ -74,3 +74,5 @@ public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductV
 		return ProductVariantMapper.ToDto(updatedVariant);
 	}
 }
+
+

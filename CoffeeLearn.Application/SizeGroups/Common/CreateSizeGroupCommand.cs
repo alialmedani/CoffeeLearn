@@ -12,3 +12,4 @@ public class CreateSizeGroupCommand : IRequest<SizeGroupDto>
 	public List<CreateSizeOptionRequest> SizeOptions { get; set; } = new();
 }
 
+

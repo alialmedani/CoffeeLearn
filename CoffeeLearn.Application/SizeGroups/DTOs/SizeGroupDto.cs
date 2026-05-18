@@ -14,3 +14,4 @@ public class SizeGroupDto
 	public List<SizeOptionDto> SizeOptions { get; set; } = new();
 }
 
+

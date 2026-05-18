@@ -50,13 +50,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 		await _context.SaveChangesAsync(cancellationToken);
 
 		var createdProduct = await _context.Products
-			.Include(x => x.Category)
-			.Include(x => x.Brand)
-			.Include(x => x.Variants)
-				.ThenInclude(x => x.SizeOption)
+			.IncludeProductDetails()
 			.AsNoTracking()
 			.FirstAsync(x => x.Id == product.Id, cancellationToken);
 
 		return ProductMapper.ToDto(createdProduct);
 	}
 }
+

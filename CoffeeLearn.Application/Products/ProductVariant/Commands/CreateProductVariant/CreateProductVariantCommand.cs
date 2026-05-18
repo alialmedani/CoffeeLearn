@@ -20,3 +20,5 @@ public class CreateProductVariantCommand : IRequest<ProductVariantDto>
 	public bool IsActive { get; set; } = true;
 }
 
+
+

@@ -11,3 +11,5 @@ public class GetProductDetailsQuery : IRequest<ProductDetailsDto?>
 
 
 
+
+

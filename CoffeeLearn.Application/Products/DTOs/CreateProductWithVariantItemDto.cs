@@ -10,3 +10,5 @@ public class CreateProductWithVariantItemDto
 	public bool IsActive { get; set; } = true;
 }
 
+
+

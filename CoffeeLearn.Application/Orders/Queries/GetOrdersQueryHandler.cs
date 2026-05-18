@@ -1,4 +1,5 @@
 using MediatR;
+using CoffeeLearn.Application.Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
@@ -46,7 +47,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
 		{
-			var search = request.Search.Trim().ToLower();
+			var search = request.Search.NormalizeText();
 
 			var matchingProductIds = await _context.Products
 				.AsNoTracking()
@@ -78,6 +79,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult
 			TotalCount = totalCount,		};
 	}
 }
+
 
 
 

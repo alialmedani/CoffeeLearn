@@ -30,7 +30,7 @@ public class GetSizeGroupsQueryHandler : IRequestHandler<GetSizeGroupsQuery, Pag
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
 		{
-			var search = request.Search.Trim().ToLower();
+			var search = request.Search.NormalizeText();
 			query = query.Where(x => x.Name.ToLower().Contains(search));
 		}
 
@@ -46,4 +46,5 @@ public class GetSizeGroupsQueryHandler : IRequestHandler<GetSizeGroupsQuery, Pag
 			cancellationToken);
 	}
 }
+
 

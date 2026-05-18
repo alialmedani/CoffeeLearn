@@ -19,3 +19,4 @@ public class GetCategoriesQuery : IRequest<PagedResult<CategoryDto>>
 
 
 
+

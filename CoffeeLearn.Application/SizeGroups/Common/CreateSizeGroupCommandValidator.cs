@@ -29,3 +29,4 @@ public class CreateSizeGroupCommandValidator : AbstractValidator<CreateSizeGroup
 	}
 }
 
+

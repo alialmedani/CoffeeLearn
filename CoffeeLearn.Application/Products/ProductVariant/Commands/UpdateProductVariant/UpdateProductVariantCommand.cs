@@ -20,3 +20,5 @@ public class UpdateProductVariantCommand : IRequest<ProductVariantDto?>
 	public bool IsActive { get; set; }
 }
 
+
+

@@ -21,16 +21,13 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 	public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
 	{
 		var query = _context.Products
-			.Include(x => x.Category)
-			.Include(x => x.Brand)
-			.Include(x => x.Variants)
-				.ThenInclude(x => x.SizeOption)
+			.IncludeProductDetails()
 			.AsNoTracking()
 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
 		{
-			var search = request.Search.Trim().ToLower();
+			var search = request.Search.NormalizeText();
 			query = query.Where(x => x.Name.ToLower().Contains(search));
 		}
 
@@ -92,3 +89,4 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, PagedRe
 			cancellationToken);
 	}
 }
+

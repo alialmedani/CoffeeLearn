@@ -1,4 +1,5 @@
 using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Application.Common.Extensions;
 
 namespace CoffeeLearn.Application.Products.Common;
 
@@ -9,8 +10,8 @@ public static class ProductSortingHelper
 		string? sortBy,
 		string? sortDirection)
 	{
-		var normalizedSortBy = sortBy?.Trim().ToLower();
-		var normalizedSortDirection = sortDirection?.Trim().ToLower() ?? "asc";
+		var normalizedSortBy = sortBy.NormalizeText();
+		var normalizedSortDirection = sortDirection.NormalizeText() ?? "asc";
 
 		return (normalizedSortBy, normalizedSortDirection) switch
 		{
@@ -40,6 +41,8 @@ public static class ProductSortingHelper
 		};
 	}
 }
+
+
 
 
 

@@ -8,3 +8,4 @@ public class GetSizeGroupByIdQuery : IRequest<SizeGroupDto?>
 	public int Id { get; set; }
 }
 
+

@@ -78,3 +78,5 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
 		return ProductVariantMapper.ToDto(createdVariant);
 	}
 }
+
+

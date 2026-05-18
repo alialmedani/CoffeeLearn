@@ -1,4 +1,5 @@
 using CoffeeLearn.Application.Common.Exceptions;
+using CoffeeLearn.Application.Common.Extensions;
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.SizeGroups.Common;
 using CoffeeLearn.Application.SizeGroups.DTOs;
@@ -31,14 +32,14 @@ public class CreateSizeGroupCommandHandler : IRequestHandler<CreateSizeGroupComm
 		var duplicateGroupExists = await _context.SizeGroups
 			.AnyAsync(x =>
 				x.CategoryId == request.CategoryId &&
-				x.Name.ToLower() == request.Name.Trim().ToLower(),
+				x.Name.ToLower() == request.Name.NormalizeText(),
 				cancellationToken);
 
 		if (duplicateGroupExists)
 			throw new BusinessRuleException("Size group already exists for this category.");
 
 		var duplicateSizes = request.SizeOptions
-			.GroupBy(x => x.Name.Trim().ToLower())
+			.GroupBy(x => x.Name.NormalizeText())
 			.Any(x => x.Count() > 1);
 
 		if (duplicateSizes)
@@ -70,4 +71,5 @@ public class CreateSizeGroupCommandHandler : IRequestHandler<CreateSizeGroupComm
 		return SizeGroupMapper.ToDto(createdSizeGroup);
 	}
 }
+
 

@@ -34,3 +34,5 @@ public class DeactivateProductCommandHandler : IRequestHandler<DeactivateProduct
 
 
 
+
+

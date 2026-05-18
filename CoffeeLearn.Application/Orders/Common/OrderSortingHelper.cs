@@ -1,4 +1,5 @@
 using CoffeeLearn.Domain.Entities;
+using CoffeeLearn.Application.Common.Extensions;
 
 namespace CoffeeLearn.Application.Orders.Common;
 
@@ -10,8 +11,8 @@ public static class OrderSortingHelper
 		string? sortDirection,
 		string defaultSortBy = "createdat")
 	{
-		var normalizedSortBy = sortBy?.Trim().ToLower() ?? defaultSortBy;
-		var normalizedSortDirection = sortDirection?.Trim().ToLower() ?? "desc";
+		var normalizedSortBy = sortBy.NormalizeText() ?? defaultSortBy;
+		var normalizedSortDirection = sortDirection.NormalizeText() ?? "desc";
 
 		return (normalizedSortBy, normalizedSortDirection) switch
 		{
@@ -40,6 +41,7 @@ public static class OrderSortingHelper
 		};
 	}
 }
+
 
 
 

@@ -9,3 +9,5 @@ public static class ProductVariantDisplayHelper
 		return variant.SizeOption?.Name ?? string.Empty;
 	}
 }
+
+

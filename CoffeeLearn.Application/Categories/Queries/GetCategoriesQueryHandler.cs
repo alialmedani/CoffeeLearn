@@ -25,7 +25,7 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
 		{
-			var search = request.Search.Trim().ToLower();
+			var search = request.Search.NormalizeText();
 			query = query.Where(x => x.Name.ToLower().Contains(search));
 		}
 
@@ -46,6 +46,7 @@ request.MaxResultCount,
 			cancellationToken);
 	}
 }
+
 
 
 

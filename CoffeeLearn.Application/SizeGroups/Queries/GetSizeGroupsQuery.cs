@@ -14,3 +14,4 @@ public class GetSizeGroupsQuery : IRequest<PagedResult<SizeGroupDto>>
 	public int? MaxResultCount { get; set; }
 }
 
+

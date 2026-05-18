@@ -8,3 +8,4 @@ public record ActivateCategoryCommand(int Id) : IRequest<CategoryDto?>;
 
 
 
+

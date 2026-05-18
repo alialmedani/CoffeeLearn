@@ -26,3 +26,5 @@ public class ProductVariantDto
 	public DateTime? UpdatedAt { get; set; }
 }
 
+
+
