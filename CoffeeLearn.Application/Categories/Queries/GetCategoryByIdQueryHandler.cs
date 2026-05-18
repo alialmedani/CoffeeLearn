@@ -19,6 +19,7 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
 	{
 		var category = await _context.Categories
 			.AsNoTracking()
+			.Include(x => x.SizeOptions)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (category is null)

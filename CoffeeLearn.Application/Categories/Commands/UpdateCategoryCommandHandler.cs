@@ -1,6 +1,7 @@
 ﻿using CoffeeLearn.Application.Categories.Common;
 using CoffeeLearn.Application.Categories.DTOs;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 	public async Task<CategoryDto?> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
 	{
 		var category = await _context.Categories
+			.Include(x => x.SizeOptions)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		if (category is null)
@@ -25,8 +27,26 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
 		category.Update(request.Name, request.Description);
 
+		foreach (var oldSizeOption in category.SizeOptions.ToList())
+		{
+			_context.CategorySizeOptions.Remove(oldSizeOption);
+		}
+
+		foreach (var sizeOption in request.SizeOptions)
+		{
+			category.SizeOptions.Add(new CategorySizeOption(
+				category.Id,
+				sizeOption.SizeName,
+				sizeOption.SortOrder));
+		}
+
 		await _context.SaveChangesAsync(cancellationToken);
 
-		return CategoryMapper.ToDto(category);
+		var updatedCategory = await _context.Categories
+			.AsNoTracking()
+			.Include(x => x.SizeOptions)
+			.FirstAsync(x => x.Id == category.Id, cancellationToken);
+
+		return CategoryMapper.ToDto(updatedCategory);
 	}
 }

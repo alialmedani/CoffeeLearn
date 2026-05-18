@@ -23,7 +23,7 @@ public class AppDbContext : DbContext, IApplicationDbContext
 	public DbSet<UploadedFile> UploadedFiles => Set<UploadedFile>();
 	public DbSet<Category> Categories => Set<Category>();
 	public DbSet<Brand> Brands => Set<Brand>();
-
+	public DbSet<CategorySizeOption> CategorySizeOptions => Set<CategorySizeOption>();
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		var entries = ChangeTracker
@@ -117,6 +117,28 @@ public class AppDbContext : DbContext, IApplicationDbContext
 				.WithMany(x => x.Products)
 				.HasForeignKey(x => x.BrandId)
 				.OnDelete(DeleteBehavior.SetNull);
+
+			entity.HasQueryFilter(x => !x.IsDeleted);
+		});
+		modelBuilder.Entity<CategorySizeOption>(entity =>
+		{
+			entity.Property(x => x.SizeName)
+				.HasMaxLength(50)
+				.IsRequired();
+
+			entity.Property(x => x.SortOrder)
+				.IsRequired();
+
+			entity.Property(x => x.IsActive)
+				.IsRequired();
+
+			entity.HasOne(x => x.Category)
+				.WithMany(x => x.SizeOptions)
+				.HasForeignKey(x => x.CategoryId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			entity.HasIndex(x => new { x.CategoryId, x.SizeName })
+				.IsUnique();
 
 			entity.HasQueryFilter(x => !x.IsDeleted);
 		});

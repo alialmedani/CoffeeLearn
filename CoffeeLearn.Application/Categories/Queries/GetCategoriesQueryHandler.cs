@@ -5,6 +5,7 @@ using CoffeeLearn.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CoffeeLearn.Application.Common.Extensions;
+
 namespace CoffeeLearn.Application.Categories.Queries;
 
 public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, PagedResult<CategoryDto>>
@@ -20,6 +21,7 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 	{
 		var query = _context.Categories
 			.AsNoTracking()
+			.Include(x => x.SizeOptions)
 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Search))
@@ -34,16 +36,14 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Pag
 		}
 
 		query = CategorySortingHelper.ApplySorting(
-		query,
-		request.SortBy,
-		request.SortDirection);
-
-
+			query,
+			request.SortBy,
+			request.SortDirection);
 
 		return await query.ToPagedResultAsync(
-	request.PageNumber,
-	request.PageSize,
-	CategoryMapper.ToDto,
-	cancellationToken);
+			request.PageNumber,
+			request.PageSize,
+			CategoryMapper.ToDto,
+			cancellationToken);
 	}
 }

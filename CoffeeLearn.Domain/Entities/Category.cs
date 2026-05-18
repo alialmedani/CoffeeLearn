@@ -7,7 +7,10 @@ public class Category : BaseEntity
 	public string Name { get; private set; } = null!;
 	public string? Description { get; private set; }
 	public bool IsActive { get; private set; }
+
 	public List<Product> Products { get; private set; } = new();
+	public List<CategorySizeOption> SizeOptions { get; private set; } = new();
+
 	private Category()
 	{
 	}

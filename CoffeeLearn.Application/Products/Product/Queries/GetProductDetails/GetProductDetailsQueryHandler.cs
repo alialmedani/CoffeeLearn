@@ -1,6 +1,7 @@
-﻿using CoffeeLearn.Application.Products.Common;
-using CoffeeLearn.Application.Products.DTOs;
+﻿using CoffeeLearn.Application.Common.Models;
 using CoffeeLearn.Application.Interfaces;
+using CoffeeLearn.Application.Products.Common;
+using CoffeeLearn.Application.Products.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ public class GetProductDetailsQueryHandler : IRequestHandler<GetProductDetailsQu
 
 		var productDto = ProductMapper.ToDto(product);
 
-		var activeVariants = product.Variants
+		var variants = product.Variants
 			.Where(x => !x.IsDeleted)
 			.OrderBy(x => x.Color)
 			.ThenBy(x => x.Size)
@@ -43,17 +44,29 @@ public class GetProductDetailsQueryHandler : IRequestHandler<GetProductDetailsQu
 			Description = productDto.Description,
 			ImageUrl = productDto.ImageUrl,
 
-			CategoryId = productDto.CategoryId,
-			CategoryName = productDto.CategoryName,
+			Category = product.Category is null
+				? null
+				: new LookupDto
+				{
+					Id = product.Category.Id,
+					Name = product.Category.Name,
+					Description = product.Category.Description
+				},
 
-			BrandId = productDto.BrandId,
-			BrandName = productDto.BrandName,
+			Brand = product.Brand is null
+				? null
+				: new LookupDto
+				{
+					Id = product.Brand.Id,
+					Name = product.Brand.Name,
+					Description = product.Brand.Description
+				},
 
 			TotalVariantStock = productDto.TotalVariantStock,
 			ActiveVariantCount = productDto.ActiveVariantCount,
 			AvailabilityStatus = productDto.AvailabilityStatus,
 
-			Colors = activeVariants
+			Colors = variants
 				.GroupBy(x => x.Color)
 				.Select(group => new ProductColorGroupDto
 				{

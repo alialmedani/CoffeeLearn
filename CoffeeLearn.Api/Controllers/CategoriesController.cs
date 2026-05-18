@@ -110,4 +110,9 @@ public class CategoriesController : ControllerBase
 		var result = await _sender.Send(query);
 		return Ok(result);
 	}
+	 
+
+	 
+
+	 
 }

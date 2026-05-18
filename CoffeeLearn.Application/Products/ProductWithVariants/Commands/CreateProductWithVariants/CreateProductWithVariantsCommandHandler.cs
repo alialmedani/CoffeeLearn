@@ -2,7 +2,6 @@
 using CoffeeLearn.Application.Interfaces;
 using CoffeeLearn.Application.Products.Common;
 using CoffeeLearn.Application.Products.DTOs;
-using CoffeeLearn.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,13 +18,37 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 
 	public async Task<ProductDto> Handle(CreateProductWithVariantsCommand request, CancellationToken cancellationToken)
 	{
-		if (request.CategoryId.HasValue)
-		{
-			var categoryExists = await _context.Categories
-				.AnyAsync(x => x.Id == request.CategoryId.Value, cancellationToken);
+		if (!request.CategoryId.HasValue)
+			throw new BusinessRuleException("Category is required when creating product with variants.");
 
-			if (!categoryExists)
-				throw new BusinessRuleException("Category not found.");
+		var category = await _context.Categories
+			.Include(x => x.SizeOptions)
+			.FirstOrDefaultAsync(x => x.Id == request.CategoryId.Value, cancellationToken);
+
+		if (category is null)
+			throw new BusinessRuleException("Category not found.");
+
+		if (!category.IsActive)
+			throw new BusinessRuleException("Category is inactive.");
+
+		var activeSizeOptions = category.SizeOptions
+			.Where(x => x.IsActive)
+			.Select(x => x.SizeName.Trim().ToLower())
+			.ToHashSet();
+
+		if (!activeSizeOptions.Any())
+			throw new BusinessRuleException("Category does not have active size options.");
+
+		var invalidSizes = request.Variants
+			.Select(x => x.Size.Trim())
+			.Where(size => !activeSizeOptions.Contains(size.ToLower()))
+			.Distinct()
+			.ToList();
+
+		if (invalidSizes.Any())
+		{
+			throw new BusinessRuleException(
+				$"Invalid size option(s) for this category: {string.Join(", ", invalidSizes)}.");
 		}
 
 		if (request.BrandId.HasValue)
@@ -61,7 +84,7 @@ public class CreateProductWithVariantsCommandHandler : IRequestHandler<CreatePro
 
 		foreach (var item in request.Variants)
 		{
-			product.Variants.Add(new CoffeeLearn.Domain.Entities.ProductVariant
+			product.Variants.Add(new Domain.Entities.ProductVariant
 			{
 				Color = item.Color.Trim(),
 				Size = item.Size.Trim(),

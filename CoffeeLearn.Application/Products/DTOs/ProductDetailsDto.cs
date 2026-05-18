@@ -1,4 +1,5 @@
-﻿using CoffeeLearn.Domain.Enums;
+﻿using CoffeeLearn.Application.Common.Models;
+using CoffeeLearn.Domain.Enums;
 
 namespace CoffeeLearn.Application.Products.DTOs;
 
@@ -10,11 +11,8 @@ public class ProductDetailsDto
 	public string? Description { get; set; }
 	public string? ImageUrl { get; set; }
 
-	public int? CategoryId { get; set; }
-	public string? CategoryName { get; set; }
-
-	public int? BrandId { get; set; }
-	public string? BrandName { get; set; }
+	public LookupDto? Category { get; set; }
+	public LookupDto? Brand { get; set; }
 
 	public int TotalVariantStock { get; set; }
 	public int ActiveVariantCount { get; set; }

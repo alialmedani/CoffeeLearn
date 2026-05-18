@@ -10,4 +10,6 @@ public class CategoryDto
 	public DateTime CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
+
+	public List<CategorySizeOptionDto> SizeOptions { get; set; } = new();
 }
